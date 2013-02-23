@@ -1,0 +1,119 @@
+/******************************************************************
+Compilers, Project 1
+Author: Max Lapides
+
+Stylesheet: Main Styles
+
+******************************************************************/
+
+// BORDER-BOX ALL THE THINGS! (http://paulirish.com/2012/box-sizing-border-box-ftw/)
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing:    border-box;
+	box-sizing:         border-box;
+}
+
+::selection {
+	background: #d2d2d2;
+}
+
+body {
+	background: image-url('dark_wall.png') repeat;
+}
+
+#container {
+	@include border-radius(5px);
+	@include box-shadow(0 0 10px black);
+	border: solid 1px black;
+	width: 960px;
+	margin: 40px auto 0;
+	padding:20px;
+	background: lighten(#ebebeb, 2%);
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+h1 {
+	margin-top: 0;
+}
+
+h2 {
+	border-bottom: solid 1px #B7C2CE;
+	padding-bottom: 10px;
+	margin-bottom: 0;
+}
+
+.textbox-container {
+	float:left;
+	margin-bottom: 0;
+}
+
+.textbox {
+	height: 400px;
+}
+
+#editor-container {
+	@extend .textbox-container;
+}
+
+	#editor {
+		@extend .textbox;
+		width:349px;
+	    position: relative;
+	}
+
+#output-container {
+	@extend .textbox-container;
+	margin-left: 20px;
+}
+
+	#output {
+		@extend .textbox;
+		@include border-radius(0);
+		width:549px;
+		background: #1D1F21;
+		color: #C5C8C6;
+		font-family: Monaco, Menlo, 'Ubuntu Mono', 'Droid Sans Mono', Consolas, monospace;
+		font-size: 12px;
+		overflow: scroll;
+		margin: 0;
+	}
+
+	.error {
+		color: lighten(red, 20%);
+	}
+
+	.warning {
+		color: lighten(yellow, 25%);
+	}
+
+footer {
+	clear: both;
+}
+
+#verbose-container {
+	padding:15px 0;
+
+	input {
+		margin: 0;
+	}
+
+	label {
+		display: inline;
+	}
+
+}
+
+#tests {
+	float: right;
+	width: 210px;
+	padding: 24px 0 0;
+
+	a {
+		float: left;
+		margin:5px 0 0 5px;
+	}
+
+}
