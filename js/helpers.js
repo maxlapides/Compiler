@@ -392,15 +392,6 @@ function removeFromSymbolTable(id) {
 
 function addToSymbolTable(id, type) {
 
-	// if we were given a type (KEYWORD)
-	if(type !== undefined) {
-		outVerbose(parseTabs() + "Adding to Symbol Table: ID = " + id + ", TYPE = " + type);
-
-	// otherwise, we weren't given a type (KEYWORD)
-	} else {
-		outVerbose(parseTabs() + "Adding to Symbol Table: ID = " + id);
-	}
-
 	var alreadyInTable = inSymbolTable(id);
 
 	// if it is already in the symbol table and we're given a type, we need to overwrite the old value in the symbol table
@@ -417,6 +408,15 @@ function addToSymbolTable(id, type) {
 			id: id,
 			type: type
 		});
+
+		// if we were given a type (KEYWORD)
+		if(type !== undefined) {
+			outVerbose(parseTabs() + "Adding to Symbol Table: ID = " + id + ", TYPE = " + type);
+
+		// otherwise, we weren't given a type (KEYWORD)
+		} else {
+			outVerbose(parseTabs() + "Adding to Symbol Table: ID = " + id);
+		}
 
 	}
 
