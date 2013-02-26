@@ -17,15 +17,7 @@ function lex() {
 	for(index = 0; index < sourceCode.length; index++) {
 
 		// verbose output
-		if(currChar() === "\n") {
-			outVerbose(tab + "Lexing: newline");
-		} else if(currChar() === "\t") {
-			outVerbose(tab + "Lexing: tab");
-		} else if(currChar() === " ") {
-			outVerbose(tab + "Lexing: space");
-		} else {
-			outVerbose(tab + "Lexing: " + currChar());
-		}
+		outVerbose(tab + "Lexing: " + currCharName());
 
 		// type: digit
 		if(!isNaN(parseInt(currChar(), 10))) {
@@ -49,9 +41,9 @@ function lex() {
 		} else if(lexingCharExpr && !currChar().match(/[a-z|"]/)) {
 
 			if(verbose) {
-				outError(tab + 'ERROR: "' + currChar() + '" is not valid in a CharExpr' + errorLocation());
+				outError(tab + 'ERROR: ' + currCharName() + ' is not valid in a CharExpr' + errorLocation());
 			} else {
-				outError('ERROR: "' + currChar() + '" is not valid in a CharExpr' + errorLocation());
+				outError('ERROR: ' + currCharName() + ' is not valid in a CharExpr' + errorLocation());
 			}
 
 		// type: identifier type (int)

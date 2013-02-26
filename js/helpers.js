@@ -265,6 +265,21 @@ function checkKeyword(type) {
 
 }
 
+// gets the name that we'll output for the current character
+function currCharName() {
+
+	if(currChar() === "\n") {
+		return "newline";
+	} else if(currChar() === "\t") {
+		return "tab";
+	} else if(currChar() === " ") {
+		return "space";
+	} else {
+		return currChar();
+	}
+
+}
+
 
 /******************/
 /* !PARSE HELPERS */
