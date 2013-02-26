@@ -18,6 +18,8 @@ function getTest3() {}
 function getTest4() {}
 function getTest5() {}
 function getTest6() {}
+function getTest7() {}
+function getTest8() {}
 
 function test(testNum) {
 
@@ -49,6 +51,14 @@ function test(testNum) {
 
 		case 6:
 			testProgram = getTest6();
+			break;
+
+		case 7:
+			testProgram = getTest7();
+			break;
+
+		case 8:
+			testProgram = getTest8();
 			break;
 
 	}
@@ -115,13 +125,31 @@ function getTest4() {
 
 	var testProgram;
 
-	testProgram = "int a $";
+	testProgram  = "{\n";
+	testProgram += "\tint i\n";
+	testProgram += "\tchar c\n";
+	testProgram += "\t{\n";
+	testProgram += "\t\ti = 2\n";
+	testProgram += "\t\tc = 3\n";
+	testProgram += "\t}\n";
+	testProgram += "\tP(int x)\n";
+	testProgram += "} $";
 
 	return testProgram;
 
 }
 
 function getTest5() {
+
+	var testProgram;
+
+	testProgram = "int a $";
+
+	return testProgram;
+
+}
+
+function getTest6() {
 
 	var testProgram;
 
@@ -143,7 +171,7 @@ function getTest5() {
 
 }
 
-function getTest6() {
+function getTest7() {
 
 	var testProgram;
 
@@ -158,6 +186,24 @@ function getTest6() {
 	testProgram += "\tP(i)\n";
 	testProgram += "\tP(c)\n";
 	testProgram += "\tP(\"done\")\n";
+	testProgram += "} $";
+
+	return testProgram;
+
+}
+
+function getTest8() {
+
+	var testProgram;
+
+	testProgram  = "{\n";
+	testProgram += "\tchar x\n";
+	testProgram += "\tx = \"woot\"\n";
+	testProgram += "\tchar y\n";
+	testProgram += "\ty = x\n";
+	testProgram += "\tP(y)\n";
+	testProgram += "\tint z\n";
+	testProgram += "\tz = 2 + \"two\"\n";
 	testProgram += "} $";
 
 	return testProgram;
