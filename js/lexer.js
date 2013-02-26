@@ -74,7 +74,7 @@ function lex() {
 
 			// while we're not yet at the end of the string
 			//   and the following character is not a whitespace character
-			while(nextCharExists() && nextChar().match(/[a-z]/)) {
+			while(nextCharExists() && !nextChar().match(/\s/)) {
 				outVerbose(tab + "Lexing: " + currChar(++index));
 				errantChars += currChar();
 			}
