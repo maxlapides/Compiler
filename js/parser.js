@@ -21,7 +21,7 @@ function parseSingleToken(expectedType, expectedOut) {}
 
 function parse() {
 
-	out("\nPARSING...");
+	out("<br />PARSING...");
 
 	stage = "parse";
 

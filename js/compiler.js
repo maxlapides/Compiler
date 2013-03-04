@@ -27,9 +27,9 @@ function startCompile() {
 	}
 
 	if(errorCount > 0) {
-		out("\nCompilation failed :(");
+		out("<br />Compilation failed :(");
 	} else {
-		out("\nCompilation succeeded!");
+		out("<br />Compilation succeeded!");
 	}
 
 	// prevents browser from following link

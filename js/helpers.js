@@ -38,7 +38,7 @@ function reset() {
 
 // outputs given string
 function out(msg) {
-    output.innerHTML += msg + "\n";
+    output.innerHTML += msg + "<br />";
 }
 
 // outputs given string, increments error counter

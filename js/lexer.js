@@ -9,7 +9,7 @@ Script: Lexer
 
 function lex() {
 
-	out("\nLEXING...");
+	out("<br />LEXING...");
 
 	stage = "lex";
 

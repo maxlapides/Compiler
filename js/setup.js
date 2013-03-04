@@ -27,7 +27,7 @@ editor.getSession().setMode("ace/mode/java");   // Java is close enough!
 
 // constants
 var output = document.getElementById("output");
-var tab = "   ";
+var tab = "&nbsp;&nbsp;&nbsp;";
 var verboseCheck = document.getElementById("verbose");
 var EOF = "$";
 
