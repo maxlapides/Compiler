@@ -311,7 +311,12 @@ function parsePrint() {
 
 		}
 
-		outVerbose(parseTabs() + "Found )");
+		if(success) {
+			outVerbose(parseTabs() + "Found )");
+		} else {
+			outVerbose(parseTabs() + "Did not find )");
+		}
+
 		numTabs--;
 
 	}
