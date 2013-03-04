@@ -158,7 +158,7 @@ function parse() {
 		out(tab + tab + "ID | TYPE");
 		out(tab + tab + "---+-----");
 		for(var k = 0; k < symbolTable.length; k++) {
-			out(tab + tab + symbolTable[k].id + "  | " + symbolTable[k].type);
+			out(tab + tab + symbolTable[k].id + "&nbsp;&nbsp;|&nbsp;" + symbolTable[k].type);
 		}
 	} else {
 		out(tab + "No symbols in Symbol Table.");
