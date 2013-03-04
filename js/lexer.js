@@ -13,6 +13,10 @@ function lex() {
 
 	stage = "lex";
 
+	// pattern variable to hold all allowed next characters (after a character)
+	// allowed characters: whitespace, ), }, =, $
+	var allowedNextChars = /\s|\)|\}|=|\$/;
+
 	// iterate through the source code, one character at a time
 	for(index = 0; index < sourceCode.length; index++) {
 
@@ -48,13 +52,13 @@ function lex() {
 
 		// type: identifier type (int)
 		// if this character is "i", a next character exists, and that character is not whitespace or ) or }
-		} else if(currChar() === "i" && nextCharExists() && !nextChar().match(/\s|\)|\}/)) {
+		} else if(currChar() === "i" && nextCharExists() && !nextChar().match(allowedNextChars)) {
 
 			checkKeyword("int");
 
 		// type: identifier type (char)
 		// if this character is "c", a next character exists, and that character is not whitespace or ) or }
-		} else if(currChar() === "c" && nextCharExists() && !nextChar().match(/\s|\)|\}/)) {
+		} else if(currChar() === "c" && nextCharExists() && !nextChar().match(allowedNextChars)) {
 
 			checkKeyword("char");
 
@@ -66,7 +70,7 @@ function lex() {
 
 			// while we're not yet at the end of the string
 			//   and the following character is not a whitespace character or ) or }
-			while(nextCharExists() && !nextChar().match(/\s|\)|\}/)) {
+			while(nextCharExists() && !nextChar().match(allowedNextChars)) {
 				outVerbose(tab + "Lexing: " + currChar(++index));
 				errantChars += currChar();
 			}
