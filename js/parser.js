@@ -462,7 +462,7 @@ function parseIntExpr() {
 	// if it's a digit not followed by an operator we're pretty much done here!
 	if(currToken().type === T_TYPE.DIGIT && (!nextTokenExists() || tokens[index + 1].type !== T_TYPE.OP)) {
 
-		outVerbose(parseTabs() + "Found digit, " + currToken().value);
+		outVerbose(parseTabs() + "Found digit: " + currToken().value);
 		numTabs--;
 
 		outVerbose(parseTabs() + "Found IntExpr");
