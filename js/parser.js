@@ -83,12 +83,12 @@ function parse() {
 					extras += "s";
 				}
 
-				// error: we found extra tokens
-				var extraTokensMsg = "ERROR: found " + (tokens.length - index) + " extra " + extras + ":";
+				// warning: we found extra tokens
+				var extraTokensMsg = "WARNING: found " + (tokens.length - index) + " extra " + extras + ":";
 				if(verbose) {
-					outError(tab + extraTokensMsg);
+					outWarning(tab + extraTokensMsg);
 				} else {
-					outError(extraTokensMsg);
+					outWarning(extraTokensMsg);
 				}
 
 				// print each extra token
