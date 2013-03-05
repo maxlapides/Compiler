@@ -85,11 +85,7 @@ function parse() {
 
 				// warning: we found extra tokens
 				var extraTokensMsg = "WARNING: found " + (tokens.length - index) + " extra " + extras + ":";
-				if(verbose) {
-					outWarning(tab + extraTokensMsg);
-				} else {
-					outWarning(extraTokensMsg);
-				}
+				outWarning(extraTokensMsg);
 
 				// print each extra token
 				for( /* no variable to set */ ; index < tokens.length; index++) {
