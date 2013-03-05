@@ -316,7 +316,7 @@ function outCurrToken() {
 }
 
 // moves pointer to next token and optionally prints it out
-function nextToken(noOut) {
+function nextToken(noOut, forceOut) {
 
 	if(nextTokenExists()) {
 
@@ -324,7 +324,7 @@ function nextToken(noOut) {
 
 		// sometimes this function will be called after a fatal error occurs
 		// when that happens, we don't want to output any information about further tokens
-		if(!noOut && errorCount === 0) {
+		if(forceOut || (!noOut && errorCount === 0)) {
 			outCurrToken();
 		}
 

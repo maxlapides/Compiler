@@ -52,21 +52,34 @@ function parse() {
 			// parse EOF
 			numTabs++;
 
-			// should be an EOF token
-			nextToken();
+			var needToAddEOF = false;
 
-			// if it's not...
-			if(currToken().type !== T_TYPE.EOF) {
+			// loop through extra tokens until we find the EOF
+			while(nextTokenExists()) {
 
-				// throw a warning
-				outWarningExpected("EOF");
+				// move to next token
+				nextToken(false, true);
 
-				// we'll automatically resolve this warning by adding the missing EOF token at this index
-				addToken({ type: T_TYPE.EOF }, index);
+				// if it's not an EOF
+				if(currToken().type !== T_TYPE.EOF) {
 
-			// otherwise, found it!
-			} else {
-				outVerbose(parseTabs() + "Found EOF");
+					// throw an error
+					outErrorExpected("EOF");
+					needToAddEOF = true;
+
+				// otherwise, found it!
+				} else {
+					outVerbose(parseTabs() + "Found EOF");
+					needToAddEOF = false;
+					break;
+				}
+
+			}
+
+			// we'll automatically resolve the missing EOF by adding the missing EOF token at this index
+			if(needToAddEOF) {
+				addToken({ type: T_TYPE.EOF });
+				nextToken(true);
 			}
 
 			numTabs--;
