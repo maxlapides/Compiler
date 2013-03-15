@@ -33,6 +33,7 @@ var EOF = "$";
 
 // global variables
 var sourceCode;
+var outMsg;
 var verbose;
 var index;
 var errorCount;

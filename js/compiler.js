@@ -32,6 +32,9 @@ function startCompile() {
 		out("<br />Compilation succeeded!");
 	}
 
+	// put output in output box
+	output.innerHTML += outMsg;
+
 	// prevents browser from following link
 	return false;
 

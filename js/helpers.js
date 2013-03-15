@@ -19,6 +19,7 @@ function reset() {
 
 	// global variables
 	sourceCode = editor.getValue();
+	outMsg = "";
 	verbose = verboseCheck.checked;
 	index = 0;
 	errorCount = 0;
@@ -38,7 +39,11 @@ function reset() {
 
 // outputs given string
 function out(msg) {
-    output.innerHTML += msg + "<br />";
+
+	// This method was way too slow
+	//output.innerHTML += msg + "<br />";
+
+	outMsg += msg + "<br />";
 }
 
 // outputs given string, increments error counter
