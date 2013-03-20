@@ -67,7 +67,8 @@ function lex() {
 			// while we're not yet at the end of the string
 			//   and the following character is a-z
 			while(nextCharExists() && nextChar().match(/[a-z]/)) {
-				outVerbose(tab + "Lexing: " + currChar(++index));
+				++index;
+				outVerbose(tab + "Lexing: " + currChar());
 				errantChars += currChar();
 			}
 
@@ -106,6 +107,21 @@ function lex() {
 			addToken({
 				type: T_TYPE.EOF
 			});
+
+			// if there are more characters after this one
+			// and the following characters are not all whitespace (because we don't even care to report that)
+			if(nextCharExists() && !sourceCode.slice(++index).match(/^[\s]*$/)) {
+
+				if(verbose) {
+					outWarning(tab + 'WARNING: extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
+				} else {
+					outWarning('WARNING: extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
+				}
+
+			}
+
+			// we've reached an EOF, so no need to continue lexing
+			break;
 
 		// type: print
 		} else if(currChar() === "P") {
@@ -188,19 +204,40 @@ function lex() {
 
 	}
 
-	// halt if errors were found
+	// plural or singular warning?
+	var warning = "warning";
+	if(warningCount > 1) {
+		warning += "s";
+	}
+
 	if(errorCount > 0) {
 
-		// plural or singular?
+		// plural or singular error?
 		var error = "error";
 		if(errorCount > 1) {
 			error += "s";
 		}
 
-		out(tab + errorCount + " lexing " + error + " found. Halting compiling.");
+		if(warningCount > 0) {
+			out(tab + errorCount + " lexing " + error + " found, " + warningCount + " " + warning + " found. Halting compiling.");
+
+		} else {
+			out(tab + errorCount + " lexing " + error + " found. Halting compiling.");
+		}
+
+	} else if(warningCount > 0) {
+
+		out(tab + "Lex successful, but found " + warningCount + " " + warning + ".");
 
 	} else {
+
 		out(tab + "Lex successful!");
+
 	}
+
+	// reset warnings
+	// we can proceed to parsing if there are warnings,
+	// but we don't want to know about them anymore since they've already been reported
+	warningCount = 0;
 
 }
