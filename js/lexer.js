@@ -113,9 +113,9 @@ function lex() {
 			if(nextCharExists() && !sourceCode.slice(++index).match(/^[\s]*$/)) {
 
 				if(verbose) {
-					outWarning(tab + 'WARNING: extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
+					outWarning(tab + 'WARNING: ignoring extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
 				} else {
-					outWarning('WARNING: extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
+					outWarning('WARNING: ignoring extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
 				}
 
 			}
