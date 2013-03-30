@@ -1,5 +1,5 @@
 /******************************************************************
-Compilers, Project 1
+Compilers, Project 2
 Author: Max Lapides
 
 Script: Set Up
@@ -50,6 +50,8 @@ var lexingCharExpr;
 // parser variables
 var numTabs;
 var symbolTable;
+
+// parse tree variables
 
 // pseudo-enumeration for token types
 var T_TYPE = {

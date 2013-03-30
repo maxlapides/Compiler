@@ -1,5 +1,5 @@
 /******************************************************************
-Compilers, Project 1
+Compilers, Project 2
 Author: Max Lapides
 
 Script: Helper Functions
