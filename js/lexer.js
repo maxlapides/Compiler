@@ -37,6 +37,14 @@ function lex() {
 				value: currChar()
 			});
 
+		// type: space
+		} else if(lexingCharExpr && currChar().match(" ")) {
+
+			// add to tokens array
+			addToken({
+				type: T_TYPE.SPACE
+			});
+
 		// error case: lexing a CharExpr, but found a bad character
 		} else if(lexingCharExpr && !currChar().match(/[a-z|"]/)) {
 
@@ -52,11 +60,16 @@ function lex() {
 
 			checkKeyword("int");
 
-		// type: identifier type (char)
+		// type: identifier type (string)
 		// if this character is "c", a next character exists, and that character is not a-z
-		} else if(currChar() === "c" && nextCharExists() && nextChar().match(/[a-z]/)) {
+		} else if(currChar() === "s" && nextCharExists() && nextChar().match(/[a-z]/)) {
 
-			checkKeyword("char");
+			checkKeyword("string");
+
+		// type: identifier type (print)
+		} else if(currChar() === "p" && nextCharExists() && nextChar().match(/[a-z]/)) {
+
+			checkKeyword("print");
 
 		// type: id
 		} else if(currChar().match(/[a-z]/)) {
@@ -122,14 +135,6 @@ function lex() {
 
 			// we've reached an EOF, so no need to continue lexing
 			break;
-
-		// type: print
-		} else if(currChar() === "P") {
-
-			// add to tokens array
-			addToken({
-				type: T_TYPE.PRINT
-			});
 
 		// type: equals sign
 		} else if(currChar() === "=") {

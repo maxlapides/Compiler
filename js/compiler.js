@@ -26,6 +26,11 @@ function startCompile() {
 		parse();
 	}
 
+	// if no errors, build the parse tree
+	if(errorCount === 0) {
+		parseTree = buildParseTree();
+	}
+
 	if(errorCount > 0) {
 		out("<br />Compilation failed :(");
 	} else {

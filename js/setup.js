@@ -18,7 +18,20 @@ Script: Set Up
 var editor = ace.edit("editor");
 editor.getSession().setUseWrapMode(true);       // Wrap text!
 editor.setTheme("ace/theme/tomorrow_night");    // So dark and mysterious!
-editor.getSession().setMode("ace/mode/java");   // Java is close enough!
+editor.getSession().setMode("ace/mode/csharp"); // C# is close enough!
+
+
+/*************/
+/* !FANCYBOX */
+/*************/
+
+$(document).ready(function() {
+	$(".fancybox").fancybox({
+		width		: 900,
+		autoHeight	: true,
+		autoSize	: false
+	});
+});
 
 
 /*********************/
@@ -27,6 +40,7 @@ editor.getSession().setMode("ace/mode/java");   // Java is close enough!
 
 // constants
 var output = document.getElementById("output");
+var fancybox = document.getElementById("parse-tree");
 var tab = "&nbsp;&nbsp;&nbsp;";
 var verboseCheck = document.getElementById("verbose");
 var EOF = "$";
@@ -52,6 +66,8 @@ var numTabs;
 var symbolTable;
 
 // parse tree variables
+var parseTree;
+var nodeId;
 
 // pseudo-enumeration for token types
 var T_TYPE = {
@@ -64,5 +80,6 @@ var T_TYPE = {
 	EQUAL	: 6,
 	BRACE	: 7,
 	QUOTE	: 8,
-	CHAR	: 9
+	CHAR	: 9,
+	SPACE	: 10
 };

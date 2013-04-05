@@ -89,11 +89,11 @@ function getTest2() {
 
 	testProgram  = "{\n";
 	testProgram += "\tint a\n";
-	testProgram += "\tchar b\n";
+	testProgram += "\tstring b\n";
 	testProgram += "\tb = 3\n";
 	testProgram += "\t{\n";
 	testProgram += "\t\tc = \"hi!\"\n";
-	testProgram += "\t\tP(c)\n";
+	testProgram += "\t\tprint(c)\n";
 	testProgram += "\t}\n";
 	testProgram += "\tc = b\n";
 	testProgram += "\tc = 4 + c\n";
@@ -113,8 +113,8 @@ function getTest3() {
 	testProgram += "\t{\n";
 	testProgram += "\t\tint b\n";
 	testProgram += "\t\tb = 3\n";
-	testProgram += "\tP(2 + a)\n";
-	testProgram += "\tP(b)\n";
+	testProgram += "\tprint(2 + a)\n";
+	testProgram += "\tprint(b)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -127,12 +127,12 @@ function getTest4() {
 
 	testProgram  = "{\n";
 	testProgram += "\tint i\n";
-	testProgram += "\tchar c\n";
+	testProgram += "\tstring c\n";
 	testProgram += "\t{\n";
 	testProgram += "\t\ti = 2\n";
 	testProgram += "\t\tc = 3\n";
 	testProgram += "\t}\n";
-	testProgram += "\tP(int x)\n";
+	testProgram += "\tprint(int x)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -155,16 +155,16 @@ function getTest6() {
 
 	testProgram  = "{\n";
 	testProgram += "\tint a\n";
-	testProgram += "\tchar b\n";
+	testProgram += "\tstring b\n";
 	testProgram += "\tb = 3\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\tc = \"hi\"\n";
-	testProgram += "\t\tP(c)\n";
+	testProgram += "\t\tc = \"hello world\"\n";
+	testProgram += "\t\tprint(c)\n";
 	testProgram += "\t\t{ { x = 4 } }\n";
 	testProgram += "\t}\n";
 	testProgram += "\tc = b\n";
 	testProgram += "\tc = 4 + c\n";
-	testProgram += "\tchar c\n";
+	testProgram += "\tstring c\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -177,15 +177,15 @@ function getTest7() {
 
 	testProgram  = "{\n";
 	testProgram += "\tint i\n";
-	testProgram += "\tchar c\n";
+	testProgram += "\tstring c\n";
 	testProgram += "\t{\n";
 	testProgram += "\t\ti = 1\n";
 	testProgram += "\t\tc = \"xyz\"\n";
 	testProgram += "\t}\n";
 	testProgram += "\t{ { { } } }\n";
-	testProgram += "\tP(i)\n";
-	testProgram += "\tP(c)\n";
-	testProgram += "\tP(\"done\")\n";
+	testProgram += "\tprint(i)\n";
+	testProgram += "\tprint(c)\n";
+	testProgram += "\tprint(\"done\")\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -197,11 +197,11 @@ function getTest8() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tchar x\n";
+	testProgram += "\tstring x\n";
 	testProgram += "\tx = \"woot\"\n";
-	testProgram += "\tchar y\n";
+	testProgram += "\tstring y\n";
 	testProgram += "\ty = x\n";
-	testProgram += "\tP(y)\n";
+	testProgram += "\tprint(y)\n";
 	testProgram += "\tint z\n";
 	testProgram += "\tz = 2 + \"two\"\n";
 	testProgram += "} $";

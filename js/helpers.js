@@ -16,6 +16,7 @@ function reset() {
 
 	// clear output
 	output.innerHTML = "";
+	fancybox.innerHTML = "";
 
 	// global variables
 	sourceCode = editor.getValue();
@@ -35,6 +36,10 @@ function reset() {
 	// parser variables
 	numTabs = 1;
 	symbolTable = [];
+
+	// parse tree variables
+	parseTree = null;
+	nodeId = 0;
 }
 
 // outputs given string
@@ -212,7 +217,7 @@ function checkKeyword(type) {
 	if(checkKeywordError) {
 
 		// look for all of the rest of the characters in this word
-		while(currChar() && !currChar().match(/\s|\)|\}/)) {
+		while(currChar() && currChar().match(/[a-z]/)) {
 			outVerbose(tab + "Lexing: " + currChar());
 			keywordSoFar += currChar();
 			index++;
@@ -234,7 +239,7 @@ function checkKeyword(type) {
 
 		// while we're not yet at the end of the string
 		//   and the following character is not a whitespace character or ) or }
-		while(nextCharExists() && !nextChar().match(/\s|\)|\}/)) {
+		while(nextCharExists() && nextChar().match(/[a-z]/)) {
 
 			// start parsing the next character
 			index++;
@@ -259,10 +264,21 @@ function checkKeyword(type) {
 		} else {
 
 			// add to tokens array
-			addToken({
-				type: T_TYPE.KEYWORD,
-				value: type
-			});
+
+			if(type === "print") {
+
+				addToken({
+					type: T_TYPE.PRINT
+				});
+
+			} else {
+
+				addToken({
+					type: T_TYPE.KEYWORD,
+					value: type
+				});
+
+			}
 
 		}
 

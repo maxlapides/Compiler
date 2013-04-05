@@ -80,6 +80,15 @@ h2 {
 		overflow: scroll;
 		margin: 0;
 		white-space: nowrap;
+
+		a {
+			color: #21acf1;
+
+			&:hover {
+				color: lighten(#21acf1, 10%);
+			}
+		}
+
 	}
 
 	.error {
@@ -117,4 +126,33 @@ footer {
 		margin:5px 0 0 5px;
 	}
 
+}
+
+svg {
+	padding: 15px;
+}
+
+.node rect {
+	cursor: pointer;
+	fill: #fff;
+	fill-opacity: .5;
+	stroke: #3182bd;
+	stroke-width: 1.5px;
+}
+
+.node circle {
+	fill: #FFF;
+	stroke: #4682B4;
+	stroke-width: 1.5px;
+}
+
+.node text {
+	font-size:10px;
+	pointer-events: none;
+}
+
+path.link {
+	fill: none;
+	stroke: #999;
+	stroke-width: 1.5px;
 }

@@ -15,7 +15,7 @@ function parseExpr() {}
 function parseAssignment() {}
 function parseVarDecl() {}
 function parseIntExpr() {}
-function parseCharExpr() {}
+function parseStringExpr() {}
 function parseCharList() {}
 function parseSingleToken(expectedType, expectedOut) {}
 
@@ -172,6 +172,11 @@ function parse() {
 	} else {
 		out(tab + "No symbols in Symbol Table.");
 	}
+
+	// reset warnings
+	// we can proceed to parsing if there are warnings,
+	// but we don't want to know about them anymore since they've already been reported
+	warningCount = 0;
 
 }
 
@@ -359,7 +364,7 @@ function parseExpr() {
 			break;
 
 		case T_TYPE.QUOTE:
-			success = parseCharExpr();
+			success = parseStringExpr();
 			break;
 
 		case T_TYPE.ID:
@@ -514,11 +519,11 @@ function parseIntExpr() {
 
 }
 
-function parseCharExpr() {
+function parseStringExpr() {
 
 	var success = true;
 
-	outVerbose(parseTabs() + "Expecting CharExpr");
+	outVerbose(parseTabs() + "Expecting StringExpr");
 	numTabs++;
 
 	success = parseCharList();
@@ -529,9 +534,9 @@ function parseCharExpr() {
 	}
 
 	if(success) {
-		outVerbose(parseTabs() + "Found CharExpr");
+		outVerbose(parseTabs() + "Found StringExpr");
 	} else {
-		outVerbose(parseTabs() + "Did not find CharExpr");
+		outVerbose(parseTabs() + "Did not find StringExpr");
 	}
 
 	numTabs--;
@@ -554,6 +559,11 @@ function parseCharList() {
 			success = parseCharList();
 			break;
 
+		case T_TYPE.SPACE:
+			outCurrToken();
+			success = parseCharList();
+			break;
+
 		case T_TYPE.QUOTE:
 			index--; // back it up!
 			break;
@@ -562,7 +572,7 @@ function parseCharList() {
 			outCurrToken();
 
 			// throw an error
-			outErrorExpected("char or quotation mark");
+			outErrorExpected("char, space, or quotation mark");
 			success = false;
 
 	}
