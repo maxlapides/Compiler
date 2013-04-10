@@ -16,7 +16,7 @@ function Node(token, parent, children) {
 	this.parent = parent;
 
 	// if no children parameter given, initialize with an empty array
-	if(children === undefined || children === null) {
+	if(!children) {
 		this.children = [];
 	} else {
 		this.children = children;
@@ -28,9 +28,12 @@ function Node(token, parent, children) {
 
 	this.tokenToString = function() {
 
+		// just in case
+		if(!this.token) { return; }
+
 		if(!isNaN(this.token.type)) {
 
-			if(this.token.value !== undefined && this.token.value !== null) {
+			if(this.token.value) {
 				return getTokenType(this.token.type) + " " + this.token.value;
 			} else {
 				return getTokenType(this.token.type);
@@ -42,7 +45,7 @@ function Node(token, parent, children) {
 	};
 
 	this.toString = function() {
-		if(this.parent === null) {
+		if(!this.parent) {
 			return "[" + this.id + "] " + this.tokenToString();
 		} else {
 			return "[" + this.id + "] " + this.tokenToString() + ", Parent: node " + this.parent.id;
@@ -63,7 +66,7 @@ function Tree() {
 		var node = new Node(token, this.cur);
 
 		// if there are no nodes in the tree yet, start the tree here
-		if(this.cur === null) {
+		if(!this.cur) {
 			this.cur = node;
 
 		// otherwise, add this node to the children array
@@ -94,7 +97,7 @@ function Tree() {
 	this.endBranch = function() {
 
 		// if the current node has a parent (i.e. is NOT the superRoot)
-		if(this.cur.parent !== null && this.cur.parent !== undefined) {
+		if(this.cur.parent) {
 
 			// move the current node up to this node's parent
 			this.cur = this.cur.parent;
@@ -118,7 +121,7 @@ function Tree() {
 		}
 
 		// if tokenValue is given
-		if(tokenValue !== undefined && tokenValue !== null) {
+		if(tokenValue) {
 
 			// check to make sure tokenValue matches
 			if(currToken().value === tokenValue) {
@@ -140,7 +143,6 @@ function Tree() {
 		nextToken(true);
 
 	};
-
 
 	this.treeProgram = function() {
 
@@ -292,7 +294,7 @@ function Tree() {
 
 function buildParseTree() {
 
-	out("<br />BUILDING PARSE TREE...");
+	out("<br />BUILDING CONCRETE SYNTAX TREE...");
 
 	stage = "parseTree";
 
@@ -316,9 +318,9 @@ function buildParseTree() {
 
 	} else {
 
-		buildD3ParseTree(t);
-		out(tab + '<a class="fancybox" href="#parse-tree">Click here to see visual parse tree</a>');
-		out(tab + "Parse tree build successful!");
+		buildD3ParseTree(t, "#parse-tree");
+		out(tab + '<a class="fancybox" href="#parse-tree">Click here to see concrete syntax tree</a>');
+		out(tab + "Concrete syntax tree build successful!");
 
 	}
 

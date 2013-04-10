@@ -40,7 +40,8 @@ $(document).ready(function() {
 
 // constants
 var output = document.getElementById("output");
-var fancybox = document.getElementById("parse-tree");
+var parseTreeFbox = document.getElementById("parse-tree");
+var abstractTreeFbox = document.getElementById("abstract-tree");
 var tab = "&nbsp;&nbsp;&nbsp;";
 var verboseCheck = document.getElementById("verbose");
 var EOF = "$";
@@ -68,6 +69,7 @@ var symbolTable;
 // parse tree variables
 var parseTree;
 var nodeId;
+var abstractTree;
 
 // pseudo-enumeration for token types
 var T_TYPE = {

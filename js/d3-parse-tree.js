@@ -12,7 +12,7 @@ More information about D3.js: http://d3js.org
 // Declare globals for JSHint:
 /*global d3:true, self:true*/
 
-function buildD3ParseTree(t) {
+function buildD3ParseTree(t, selector) {
 
 	this.tree = t;
 	this.data = {};
@@ -43,7 +43,8 @@ function buildD3ParseTree(t) {
 
 	};
 
-	this.data = this.addBranch(this.tree.root);
+	// convert tree, skipping Super Root
+	this.data = this.addBranch(this.tree.root.children[0]);
 
 	function update() {
 		svg.attr("transform"," scale(" + d3.event.scale + ")");
@@ -69,7 +70,7 @@ function buildD3ParseTree(t) {
 	var diagonal = d3.svg.diagonal()
 		.projection(function (d) { return [d.x, d.y]; });
 
-	var svg = d3.select("#parse-tree").append("svg")
+	var svg = d3.select(selector).append("svg")
 		.attr("width", width)
 		.attr("height", height)
 		//.call(d3.behavior.zoom().on("zoom", update))

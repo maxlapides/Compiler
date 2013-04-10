@@ -31,6 +31,11 @@ function startCompile() {
 		parseTree = buildParseTree();
 	}
 
+	// if no errors, build the abstract syntax tree
+	if(errorCount === 0) {
+		abstractTree = buildAbstractTree();
+	}
+
 	if(errorCount > 0) {
 		out("<br />Compilation failed :(");
 	} else {

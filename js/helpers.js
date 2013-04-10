@@ -16,7 +16,8 @@ function reset() {
 
 	// clear output
 	output.innerHTML = "";
-	fancybox.innerHTML = "";
+	parseTreeFbox.innerHTML = "";
+	abstractTreeFbox.innerHTML = "";
 
 	// global variables
 	sourceCode = editor.getValue();
@@ -40,6 +41,7 @@ function reset() {
 	// parse tree variables
 	parseTree = null;
 	nodeId = 0;
+	abstractTree = null;
 }
 
 // outputs given string
