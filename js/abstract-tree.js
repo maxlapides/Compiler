@@ -105,7 +105,10 @@ function AbstractTree() {
 				// block
 				else if(treeRoot.children[0] && treeRoot.children[0].token.type === T_TYPE.BRACE) {
 					this.startBranch("block");
-					this.traverseTree(treeRoot.children[1]);
+					// ignore } if it's the next node
+					if(treeRoot.children[1].token.type !== T_TYPE.BRACE && treeRoot.children[1].token.value !== "}") {
+						this.traverseTree(treeRoot.children[1]);
+					}
 					this.endBranch();
 				}
 
@@ -151,8 +154,8 @@ function AbstractTree() {
 
 			case "VarDecl":
 				this.startBranch("declare");
-				this.addNode(treeRoot.children[0].token, "leaf");
-				this.addNode(treeRoot.children[1].token, "leaf");
+				this.addNode(treeRoot.children[0].token, "leaf"); // Type
+				this.addNode(treeRoot.children[1].token, "leaf"); // Id
 				this.endBranch();
 				break;
 
@@ -183,8 +186,7 @@ function buildAbstractTree() {
 	nodeId = 0;
 
 	// create the parse tree
-	var t = new AbstractTree();
-	//t.treeProgram();
+	abstractTree = new AbstractTree();
 
 	if(errorCount > 0) {
 
@@ -198,12 +200,10 @@ function buildAbstractTree() {
 
 	} else {
 
-		buildD3ParseTree(t, "#abstract-tree");
+		buildD3ParseTree(abstractTree, "#abstract-tree");
 		out(tab + '<a class="fancybox" href="#abstract-tree">Click here to see visual abstract syntax tree</a>');
 		out(tab + "Abstract syntax tree build successful!");
 
 	}
-
-	return t;
 
 }

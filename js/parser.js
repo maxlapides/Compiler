@@ -159,19 +159,18 @@ function parse() {
 	}
 
 	// output symbol table
+	/*
 	if(symbolTable.length) {
-		var symbolId;
-		var symbolType;
-
 		out(tab + "Symbol Table:");
 		out(tab + tab + "ID | TYPE");
 		out(tab + tab + "---+-----");
 		for(var k = 0; k < symbolTable.length; k++) {
-			out(tab + tab + symbolTable[k].id + "&nbsp;&nbsp;|&nbsp;" + symbolTable[k].type);
+			out(tab + tab + symbolTable[k].id + space + space + "|" + space + symbolTable[k].type);
 		}
 	} else {
 		out(tab + "No symbols in Symbol Table.");
 	}
+	*/
 
 	// reset warnings
 	// we can proceed to parsing if there are warnings,
@@ -369,10 +368,6 @@ function parseExpr() {
 
 		case T_TYPE.ID:
 			outVerbose(parseTabs() + "Found identifier: " + currToken().value);
-
-			// add it to the symbol table
-			addToSymbolTable(currToken().value);
-
 			break;
 
 		default:
@@ -398,14 +393,8 @@ function parseAssignment() {
 
 	var success = true;
 
-	// current token should be an identifier
-	if(currToken().type === T_TYPE.ID) {
-
-		// add it to the symbol table
-		addToSymbolTable(currToken().value);
-
 	// we should never reach this case, but better safe than sorry!
-	} else {
+	if(currToken().type !== T_TYPE.ID) {
 		outError(parseTabs() + "ERROR: could not parse Assignment Statement.");
 		success = false;
 	}
@@ -442,18 +431,12 @@ function parseVarDecl() {
 	outVerbose(parseTabs() + "Expecting VarDecl");
 	numTabs++;
 
-	// we'll need this later to add this declaration to the symbol table
-	var keyword = currToken().value;
-
 	// parse an identifier
 	success = parseSingleToken(T_TYPE.ID, "identifier");
 
 	if(success) {
 
 		outVerbose(parseTabs() + "Found VarDecl");
-
-		// add to symbol table
-		addToSymbolTable(currToken().value, keyword);
 
 	} else {
 

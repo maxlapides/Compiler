@@ -36,21 +36,31 @@ function reset() {
 
 	// parser variables
 	numTabs = 1;
-	symbolTable = [];
 
 	// parse tree variables
-	parseTree = null;
 	nodeId = 0;
+	parseTree = null;
 	abstractTree = null;
+
+	// symbol table
+	symbolTable = null;
+	curScopeId = 0;
+	uninitialized = [];
+
 }
 
 // outputs given string
-function out(msg) {
+function out(msg, noBreak) {
 
 	// This method was way too slow
 	//output.innerHTML += msg + "<br />";
 
-	outMsg += msg + "<br />";
+	if(noBreak) {
+		outMsg += msg;
+	} else {
+		outMsg += msg + "<br />";
+	}
+
 }
 
 // outputs given string, increments error counter
@@ -59,7 +69,7 @@ function outError(msg) {
 	// wrap in <span> for formatting
 	msg = '<span class="error">' + msg + '</span>';
 
-	if(verbose && stage === "parse") {
+	if(verbose && (stage === "parse" || stage === "symbolTable")) {
 		out(msg);
 	} else {
 		out(tab + msg);
@@ -147,10 +157,30 @@ function nextChar() {
 
 }
 
+// given an index of total items already iterated over, find the current character index on this line
+function lineIndex() {
+	return (index - charsBeforeThisLine);
+}
+
+// return the line and character where an error was found
+function tokenPosition() {
+	return " (line " + lineCount + ", char " + lineIndex() + ")";
+}
+
 function addToken(token, location) {
 
+	// add token position to the token
+	token.position = {};
+	token.position.line = lineCount;
+	token.position.char = lineIndex();
+
+	// adjust char location for keywords due to length of word
+	if(token.type === T_TYPE.KEYWORD) {
+		token.position.char = token.position.char - token.value.length + 1;
+	}
+
 	// if we were not given a location in the tokens array to add this token
-	if(location === undefined) {
+	if(!location) {
 
 		// just add it at the end of the array
 		tokens.push(token);
@@ -164,16 +194,6 @@ function addToken(token, location) {
 
 	}
 
-}
-
-// given an index of total items already iterated over, find the current character index on this line
-function lineIndex() {
-	return (index - charsBeforeThisLine);
-}
-
-// return the line and character where an error was found
-function errorLocation() {
-	return " (line " + lineCount + ", char " + lineIndex() + ")";
 }
 
 // toggle whether we're currently lexing a CharExpr
@@ -229,9 +249,9 @@ function checkKeyword(type) {
 		index--;
 
 		if(verbose) {
-			outError(tab + 'ERROR: "' + keywordSoFar + '" is not a valid keyword' + errorLocation());
+			outError(tab + 'ERROR: "' + keywordSoFar + '" is not a valid keyword' + tokenPosition());
 		} else {
-			outError('ERROR: "' + keywordSoFar + '" is not a valid keyword' + errorLocation());
+			outError('ERROR: "' + keywordSoFar + '" is not a valid keyword' + tokenPosition());
 		}
 
 	} else {
@@ -257,9 +277,9 @@ function checkKeyword(type) {
 		if(errantChars.length) {
 
 			if(verbose) {
-				outError(tab + 'ERROR: "' + type + errantChars + '" is not a valid keyword' + errorLocation());
+				outError(tab + 'ERROR: "' + type + errantChars + '" is not a valid keyword' + tokenPosition());
 			} else {
-				outError('ERROR: "' + type + errantChars + '" is not a valid keyword' + errorLocation());
+				outError('ERROR: "' + type + errantChars + '" is not a valid keyword' + tokenPosition());
 			}
 
 		// otherwise, all is good!
@@ -369,10 +389,12 @@ function outErrorExpected(expected) {
 
 	numTabs++;
 
+	var tokenPos = " (line " + currToken().position.line + ", char " + currToken().position.char + ")";
+
 	if(currToken().value) {
-		outError(parseTabs() + "ERROR: expected " + expected + ", found " + currToken().value + tokenNumOut());
+		outError(parseTabs() + "ERROR: expected " + expected + ", found " + currToken().value + tokenPos);
 	} else {
-		outError(parseTabs() + "ERROR: expected " + expected + ", found " + getTokenType(currToken().type) + tokenNumOut());
+		outError(parseTabs() + "ERROR: expected " + expected + ", found " + getTokenType(currToken().type) + tokenPos);
 	}
 
 	numTabs--;

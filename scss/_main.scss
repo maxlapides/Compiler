@@ -156,3 +156,42 @@ path.link {
 	stroke: #999;
 	stroke-width: 1.5px;
 }
+
+table {
+	margin-left:42px;
+
+	tr {
+		border-bottom:solid 1px #C5C8C6;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+	}
+
+	th {
+		text-align: center;
+		font-weight: normal;
+	}
+
+	th, td {
+		padding: 0 8px;
+		border-left:solid 1px #C5C8C6;
+		border-right:solid 1px #C5C8C6;
+		line-height: 23px;
+
+		&:first-child {
+			border-left:0;
+		}
+
+		&:nth-child(2) {
+			min-width: 59px;
+		}
+
+		&:last-child {
+			border-right:0;
+		}
+
+	}
+
+}

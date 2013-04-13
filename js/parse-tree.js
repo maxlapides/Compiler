@@ -303,8 +303,8 @@ function buildParseTree() {
 	numTabs = 1;
 
 	// create the parse tree
-	var t = new Tree();
-	t.treeProgram();
+	parseTree = new Tree();
+	parseTree.treeProgram();
 
 	if(errorCount > 0) {
 
@@ -318,12 +318,10 @@ function buildParseTree() {
 
 	} else {
 
-		buildD3ParseTree(t, "#parse-tree");
+		buildD3ParseTree(parseTree, "#parse-tree");
 		out(tab + '<a class="fancybox" href="#parse-tree">Click here to see concrete syntax tree</a>');
 		out(tab + "Concrete syntax tree build successful!");
 
 	}
-
-	return t;
 
 }

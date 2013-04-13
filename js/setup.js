@@ -42,6 +42,7 @@ $(document).ready(function() {
 var output = document.getElementById("output");
 var parseTreeFbox = document.getElementById("parse-tree");
 var abstractTreeFbox = document.getElementById("abstract-tree");
+var space = "&nbsp;";
 var tab = "&nbsp;&nbsp;&nbsp;";
 var verboseCheck = document.getElementById("verbose");
 var EOF = "$";
@@ -64,12 +65,16 @@ var lexingCharExpr;
 
 // parser variables
 var numTabs;
-var symbolTable;
 
 // parse tree variables
-var parseTree;
 var nodeId;
+var parseTree;
 var abstractTree;
+
+// symbol table
+var symbolTable;
+var curScopeId;
+var uninitialized;
 
 // pseudo-enumeration for token types
 var T_TYPE = {

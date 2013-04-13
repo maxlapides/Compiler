@@ -28,12 +28,17 @@ function startCompile() {
 
 	// if no errors, build the parse tree
 	if(errorCount === 0) {
-		parseTree = buildParseTree();
+		buildParseTree();
 	}
 
 	// if no errors, build the abstract syntax tree
 	if(errorCount === 0) {
-		abstractTree = buildAbstractTree();
+		buildAbstractTree();
+	}
+
+	// if no errors, build the symbol table
+	if(errorCount === 0) {
+		buildSymbolTable();
 	}
 
 	if(errorCount > 0) {

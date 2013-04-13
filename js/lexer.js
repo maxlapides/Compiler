@@ -49,9 +49,9 @@ function lex() {
 		} else if(lexingCharExpr && !currChar().match(/[a-z|"]/)) {
 
 			if(verbose) {
-				outError(tab + 'ERROR: ' + currCharName() + ' is not valid in a CharExpr' + errorLocation());
+				outError(tab + 'ERROR: ' + currCharName() + ' is not valid in a CharExpr' + tokenPosition());
 			} else {
-				outError('ERROR: ' + currCharName() + ' is not valid in a CharExpr' + errorLocation());
+				outError('ERROR: ' + currCharName() + ' is not valid in a CharExpr' + tokenPosition());
 			}
 
 		// type: identifier type (int)
@@ -89,9 +89,9 @@ function lex() {
 			if(errantChars !== currChar()) {
 
 				if(verbose) {
-					outError(tab + 'ERROR: "' + errantChars + '" is not valid' + errorLocation());
+					outError(tab + 'ERROR: "' + errantChars + '" is not valid' + tokenPosition());
 				} else {
-					outError('ERROR: "' + errantChars + '" is not valid' + errorLocation());
+					outError('ERROR: "' + errantChars + '" is not valid' + tokenPosition());
 				}
 
 			} else {
@@ -126,9 +126,9 @@ function lex() {
 			if(nextCharExists() && !sourceCode.slice(++index).match(/^[\s]*$/)) {
 
 				if(verbose) {
-					outWarning(tab + 'WARNING: ignoring extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
+					outWarning(tab + 'WARNING: ignoring extra code after EOF: "' + sourceCode.slice(index) + '"' + tokenPosition());
 				} else {
-					outWarning('WARNING: ignoring extra code after EOF: "' + sourceCode.slice(index) + '"' + errorLocation());
+					outWarning('WARNING: ignoring extra code after EOF: "' + sourceCode.slice(index) + '"' + tokenPosition());
 				}
 
 			}
@@ -178,9 +178,9 @@ function lex() {
 		} else if(!currChar().match(/\s/)) {
 
 			if(verbose) {
-				outError(tab + 'ERROR: could not lex "' + currChar() + '"' + errorLocation());
+				outError(tab + 'ERROR: could not lex "' + currChar() + '"' + tokenPosition());
 			} else {
-				outError('ERROR: could not lex "' + currChar() + '"' + errorLocation());
+				outError('ERROR: could not lex "' + currChar() + '"' + tokenPosition());
 			}
 
 		}
