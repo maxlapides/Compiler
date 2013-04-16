@@ -2,3 +2,4 @@
 codekit-config.json
 js/mini/compiler-ck.js
 .sass-cache*
+*.sublime*

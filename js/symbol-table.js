@@ -136,6 +136,7 @@ function SymbolTable() {
 	};
 
 	this.positionToString = function(position) {
+		if(position === undefined) { return ""; } // this should never happen
 		return " (line " + position.line + ", char " + position.char + ")";
 	};
 
@@ -175,11 +176,18 @@ function SymbolTable() {
 		var error;
 
 		if(symbol) {
-			symbol.initialized = true;
+			if(!inOpSubtree) {
+				outVerbose(parseTabs() + "Marked " + symbolToLookup.value + " as initialized");
+				symbol.initialized = true;
+			}
 		} else {
 			error = "ERROR: undeclared variable -> " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
 			outError(parseTabs() + error);
 			return false;
+		}
+
+		if(inOpSubtree && !symbol.initialized) {
+			outWarning(parseTabs() + "WARNING: cannot perform an operation on an uninitialized variable" + this.positionToString(symbolToLookup.position));
 		}
 
 		// type checking
@@ -187,7 +195,7 @@ function SymbolTable() {
 		if(symbol.type !== expectedType) {
 
 			if(inOpSubtree) {
-				error = "ERROR (type mismatch): cannot add string " + symbolToLookup.value + " to an int" + this.positionToString(symbolToLookup.position);
+				error = "ERROR (type mismatch): cannot perform a mathematical operation on string " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
 			} else {
 				error = "ERROR (type mismatch): " + symbolToLookup.value + " was declared " + symbol.type;
 				error += ", assigned to " + expectedType + this.positionToString(symbolToLookup.position);
@@ -237,6 +245,14 @@ function SymbolTable() {
 				this.checkSymbol(treeRoot.children[0].token, this.determineType(treeRoot.children[1].token));
 				if(treeRoot.children[1]) {
 					this.traverseTree(treeRoot.children[1]);
+				}
+				break;
+
+			case "print":
+				if(treeRoot.children[0].token.type !== T_TYPE.ID) { break; } // no reason to proceed unless we're printing an identifier
+				var symbol = this.lookupSymbol(treeRoot.children[0].token.value);
+				if(!symbol.initialized) {
+					outWarning(parseTabs() + "WARNING: cannot print an uninitialized variable" + this.positionToString(treeRoot.children[0].token.position));
 				}
 				break;
 
@@ -316,6 +332,14 @@ function buildSymbolTable() {
 
 	symbolTable.print();
 
+	// catch errors!
+
+	// plural or singular warning?
+	var warning = "warning";
+	if(warningCount > 1) {
+		warning += "s";
+	}
+
 	if(errorCount > 0) {
 
 		// plural or singular error?
@@ -324,7 +348,16 @@ function buildSymbolTable() {
 			error += "s";
 		}
 
-		out(tab + errorCount + " " + error + " found. Halting compiling.");
+		if(warningCount > 0) {
+			out(tab + errorCount + " " + error + " found, " + warningCount + " " + warning + " found. Halting compiling.");
+
+		} else {
+			out(tab + errorCount + " " + error + " found. Halting compiling.");
+		}
+
+	} else if(warningCount > 0) {
+
+		out(tab + "Symbol table build successful, but found " + warningCount + " " + warning + ".");
 
 	} else {
 
