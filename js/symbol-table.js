@@ -195,7 +195,7 @@ function SymbolTable() {
 		if(symbol.type !== expectedType) {
 
 			if(inOpSubtree) {
-				error = "ERROR (type mismatch): cannot perform a mathematical operation on string " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
+				error = "ERROR (type mismatch): cannot perform an operation on string " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
 			} else {
 				error = "ERROR (type mismatch): " + symbolToLookup.value + " was declared " + symbol.type;
 				error += ", assigned to " + expectedType + this.positionToString(symbolToLookup.position);
