@@ -181,7 +181,7 @@ function SymbolTable() {
 				symbol.initialized = true;
 			}
 		} else {
-			error = "ERROR: undeclared variable -> " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
+			error = "ERROR: undeclared variable " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
 			outError(parseTabs() + error);
 			return false;
 		}
@@ -194,9 +194,15 @@ function SymbolTable() {
 
 		if(symbol.type !== expectedType) {
 
-			if(inOpSubtree) {
+			if(!expectedType) {
+				error = "ERROR: cannot assign " + symbolToLookup.value + " to undeclared variable " + this.positionToString(symbolToLookup.position);
+			}
+
+			else if(inOpSubtree) {
 				error = "ERROR (type mismatch): cannot perform an operation on string " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
-			} else {
+			}
+
+			else {
 				error = "ERROR (type mismatch): " + symbolToLookup.value + " was declared " + symbol.type;
 				error += ", assigned to " + expectedType + this.positionToString(symbolToLookup.position);
 			}
@@ -209,17 +215,33 @@ function SymbolTable() {
 
 	this.determineType = function(token) {
 
-		if(token.type === T_TYPE.OP) {
-			return "int";
-		}
-
-		else if(token.type === T_TYPE.DIGIT) {
-			return "int";
-		}
-
-		else {
+		if(token === "string") {
 			return "string";
 		}
+
+		if(token === "int" || token.type === T_TYPE.OP || token.type === T_TYPE.DIGIT) {
+			return "int";
+		}
+
+		if(token.type === T_TYPE.ID) {
+
+			var symTabEntry = this.lookupSymbol(token.value);
+
+			if(symTabEntry && symTabEntry.type === "int") {
+				return "int";
+			}
+
+			else if(symTabEntry && symTabEntry.type === "string") {
+				return "string";
+			}
+
+			else {
+				return false;
+			}
+
+		}
+
+		return false;
 
 	};
 
@@ -252,7 +274,7 @@ function SymbolTable() {
 				if(treeRoot.children[0].token.type !== T_TYPE.ID) { break; } // no reason to proceed unless we're printing an identifier
 				var symbol = this.lookupSymbol(treeRoot.children[0].token.value);
 				if(!symbol.initialized) {
-					outWarning(parseTabs() + "WARNING: cannot print an uninitialized variable" + this.positionToString(treeRoot.children[0].token.position));
+					outError(parseTabs() + "ERROR: cannot print an uninitialized variable" + this.positionToString(treeRoot.children[0].token.position));
 				}
 				break;
 
