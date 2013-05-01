@@ -273,7 +273,9 @@ function SymbolTable() {
 			case "print":
 				if(treeRoot.children[0].token.type !== T_TYPE.ID) { break; } // no reason to proceed unless we're printing an identifier
 				var symbol = this.lookupSymbol(treeRoot.children[0].token.value);
-				if(!symbol.initialized) {
+				if(!symbol) {
+					outError(parseTabs() + "ERROR: cannot print an undeclared variable" + this.positionToString(treeRoot.children[0].token.position));
+				} else if(!symbol.initialized) {
 					outError(parseTabs() + "ERROR: cannot print an uninitialized variable" + this.positionToString(treeRoot.children[0].token.position));
 				}
 				break;
