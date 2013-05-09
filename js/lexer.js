@@ -1,5 +1,5 @@
 /******************************************************************
-Compilers, Project 2
+Compilers, Project 3
 Author: Max Lapides
 
 Script: Lexer
@@ -53,6 +53,15 @@ function lex() {
 			} else {
 				outError('ERROR: ' + currCharName() + ' is not valid in a CharExpr' + tokenPosition());
 			}
+
+		// type: identifier type (if)
+		// if this character is "i", a next character exists, and that character is "f"
+		} else if((currChar() === "i") && nextCharExists() && (nextChar() === "f")) {
+
+			addToken({
+				type: T_TYPE.KEYWORD,
+				value: "if"
+			});
 
 		// type: identifier type (int)
 		// if this character is "i", a next character exists, and that character is not a-z

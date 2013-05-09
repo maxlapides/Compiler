@@ -1,5 +1,5 @@
 /******************************************************************
-Compilers, Project 2
+Compilers, Project 3
 Author: Max Lapides
 
 Script: Parser
@@ -157,20 +157,6 @@ function parse() {
 		out(tab + "Parse successful!");
 
 	}
-
-	// output symbol table
-	/*
-	if(symbolTable.length) {
-		out(tab + "Symbol Table:");
-		out(tab + tab + "ID | TYPE");
-		out(tab + tab + "---+-----");
-		for(var k = 0; k < symbolTable.length; k++) {
-			out(tab + tab + symbolTable[k].id + space + space + "|" + space + symbolTable[k].type);
-		}
-	} else {
-		out(tab + "No symbols in Symbol Table.");
-	}
-	*/
 
 	// reset warnings
 	// we can proceed to parsing if there are warnings,
