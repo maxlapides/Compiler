@@ -180,10 +180,39 @@ function Tree() {
 				this.checkToken("BRACE", "}");
 				break;
 
+			case T_TYPE.WHILE:
+				this.treeWhileIfStatement("WhileStatement");
+				break;
+
+			case T_TYPE.IF:
+				this.treeWhileIfStatement("IfStatement");
+				break;
+
 			default: // error case
 				outErrorExpected("Statement");
 
 		}
+
+		this.endBranch();
+
+	};
+
+	this.treeWhileIfStatement = function(statementType) {
+
+		this.startBranch(statementType);
+
+		if(statementType === "WhileStatement") {
+			this.checkToken("WHILE");
+		}
+
+		else if(statementType === "IfStatement") {
+			this.checkToken("IF");
+		}
+
+		this.treeBooleanExpr();
+		this.checkToken("BRACE", "{");
+		this.treeStatementList();
+		this.checkToken("BRACE", "}");
 
 		this.endBranch();
 
@@ -232,6 +261,18 @@ function Tree() {
 				this.treeStringExpr();
 				break;
 
+			case T_TYPE.BRACE:
+				if(currToken().value === "(") {
+					this.treeBooleanExpr();
+				} else {
+					outErrorExpected("Expr");
+				}
+				break;
+
+			case T_TYPE.BOOL:
+				this.treeBooleanExpr();
+				break;
+
 			case T_TYPE.ID:
 				this.checkToken("ID");
 				break;
@@ -265,6 +306,24 @@ function Tree() {
 		this.checkToken("QUOTE");
 		this.treeCharList();
 		this.checkToken("QUOTE");
+		this.endBranch();
+	};
+
+	this.treeBooleanExpr = function() {
+		this.startBranch("BooleanExpr");
+
+		if(currToken().type === T_TYPE.BOOL) {
+			this.checkToken("BOOL");
+		}
+
+		else {
+			this.checkToken("BRACE", "(");
+			this.treeExpr();
+			this.checkToken("EQUALITY");
+			this.treeExpr();
+			this.checkToken("BRACE", ")");
+		}
+
 		this.endBranch();
 	};
 

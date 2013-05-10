@@ -119,6 +119,40 @@ function AbstractTree() {
 
 				break;
 
+			case "IfStatement":
+				this.startBranch("if");
+
+				// BooleanExpr
+				this.traverseTree(treeRoot.children[1]);
+
+				// block
+				this.startBranch("block");
+				// ignore } if it's the next node
+				if(treeRoot.children[3].token.type !== T_TYPE.BRACE && treeRoot.children[3].token.value !== "}") {
+					this.traverseTree(treeRoot.children[3]);
+				}
+				this.endBranch();
+
+				this.endBranch();
+				break;
+
+			case "WhileStatement":
+				this.startBranch("while");
+
+				// BooleanExpr
+				this.traverseTree(treeRoot.children[1]);
+
+				// block
+				this.startBranch("block");
+				// ignore } if it's the next node
+				if(treeRoot.children[3].token.type !== T_TYPE.BRACE && treeRoot.children[3].token.value !== "}") {
+					this.traverseTree(treeRoot.children[3]);
+				}
+				this.endBranch();
+
+				this.endBranch();
+				break;
+
 			case "StatementList":
 				if(treeRoot.children[0]) {
 					this.traverseTree(treeRoot.children[0]);
@@ -142,6 +176,13 @@ function AbstractTree() {
 			case "StringExpr":
 				this.startBranch("string");
 				this.traverseTree(treeRoot.children[1]);
+				this.endBranch();
+				break;
+
+			case "BooleanExpr":
+				this.startBranch("equal?");
+				this.traverseTree(treeRoot.children[1]);
+				this.traverseTree(treeRoot.children[3]);
 				this.endBranch();
 				break;
 

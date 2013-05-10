@@ -58,27 +58,47 @@ function lex() {
 		// if this character is "i", a next character exists, and that character is "f"
 		} else if((currChar() === "i") && nextCharExists() && (nextChar() === "f")) {
 
-			addToken({
-				type: T_TYPE.KEYWORD,
-				value: "if"
-			});
+			checkKeyword("if");
+
+		// type: print
+		// if this character is "p", a next character exists, and that character is a-z
+		} else if(currChar() === "p" && nextCharExists() && nextChar().match(/[a-z]/)) {
+
+			checkKeyword("print");
+
+		// type: while
+		// if this character is "w", a next character exists, and that character is a-z
+		} else if(currChar() === "w" && nextCharExists() && nextChar().match(/[a-z]/)) {
+
+			checkKeyword("while");
 
 		// type: identifier type (int)
-		// if this character is "i", a next character exists, and that character is not a-z
+		// if this character is "i", a next character exists, and that character is a-z
 		} else if(currChar() === "i" && nextCharExists() && nextChar().match(/[a-z]/)) {
 
 			checkKeyword("int");
 
 		// type: identifier type (string)
-		// if this character is "c", a next character exists, and that character is not a-z
+		// if this character is "s", a next character exists, and that character is a-z
 		} else if(currChar() === "s" && nextCharExists() && nextChar().match(/[a-z]/)) {
 
 			checkKeyword("string");
 
-		// type: identifier type (print)
-		} else if(currChar() === "p" && nextCharExists() && nextChar().match(/[a-z]/)) {
+		// type: identifier type (boolean)
+		// if this character is "b", a next character exists, and that character is a-z
+		} else if(currChar() === "b" && nextCharExists() && nextChar().match(/[a-z]/)) {
 
-			checkKeyword("print");
+			checkKeyword("boolean");
+
+		// type: boolean (true)
+		} else if(currChar() === "t" && nextCharExists() && nextChar().match(/[a-z]/)) {
+
+			checkKeyword("true");
+
+		// type: boolean (false)
+		} else if(currChar() === "f" && nextCharExists() && nextChar().match(/[a-z]/)) {
+
+			checkKeyword("false");
 
 		// type: id
 		} else if(currChar().match(/[a-z]/)) {
@@ -144,6 +164,11 @@ function lex() {
 
 			// we've reached an EOF, so no need to continue lexing
 			break;
+
+		// type: equality operator
+		} else if(currChar() === "=" && nextChar() === "=") {
+
+			checkKeyword("==");
 
 		// type: equals sign
 		} else if(currChar() === "=") {

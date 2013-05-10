@@ -280,6 +280,22 @@ function SymbolTable() {
 				}
 				break;
 
+			case "equal?":
+				var esymbol;
+				for(var i = 0; i < 2; i++) {
+					if(treeRoot.children[i].token.type === T_TYPE.ID) {
+						esymbol = this.lookupSymbol(treeRoot.children[i].token.value);
+						if(!esymbol) {
+							outError(parseTabs() + "ERROR: cannot check equality of an undeclared variable" + this.positionToString(treeRoot.children[i].token.position));
+						} else if(!esymbol.initialized) {
+							outError(parseTabs() + "ERROR: cannot check equality of an uninitialized variable" + this.positionToString(treeRoot.children[i].token.position));
+						}
+					} else {
+						this.traverseTree(treeRoot.children[i]);
+					}
+				}
+				break;
+
 			default:
 				if(treeRoot.token.type === T_TYPE.OP) {
 
@@ -296,6 +312,7 @@ function SymbolTable() {
 						error += this.positionToString(posn);
 						outError(parseTabs() + error);
 					}
+
 				}
 				this.recurseThroughChildren(treeRoot);
 				break;

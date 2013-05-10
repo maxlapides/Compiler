@@ -88,5 +88,9 @@ var T_TYPE = {
 	BRACE	: 7,
 	QUOTE	: 8,
 	CHAR	: 9,
-	SPACE	: 10
+	SPACE	: 10,
+	IF		: 11,
+	WHILE	: 12,
+	EQUALITY: 13,
+	BOOL	: 14
 };

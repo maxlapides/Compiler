@@ -293,6 +293,31 @@ function checkKeyword(type) {
 					type: T_TYPE.PRINT
 				});
 
+			} else if(type === "while") {
+
+				addToken({
+					type: T_TYPE.WHILE
+				});
+
+			} else if(type === "if") {
+
+				addToken({
+					type: T_TYPE.IF
+				});
+
+			} else if(type === "true" || type === "false") {
+
+				addToken({
+					type: T_TYPE.BOOL,
+					value: type
+				});
+
+			} else if(type === "==") {
+
+				addToken({
+					type: T_TYPE.EQUALITY
+				});
+
 			} else {
 
 				addToken({

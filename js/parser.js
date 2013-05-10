@@ -9,6 +9,7 @@ Script: Parser
 // declare functions to be overridden later
 // allows us to reference functions before they are defined
 function parseStatement() {}
+function parseWhileIfStatement() {}
 function parseStatementList() {}
 function parsePrint() {}
 function parseExpr() {}
@@ -16,6 +17,7 @@ function parseAssignment() {}
 function parseVarDecl() {}
 function parseIntExpr() {}
 function parseStringExpr() {}
+function parseBooleanExpr() {}
 function parseCharList() {}
 function parseSingleToken(expectedType, expectedOut) {}
 
@@ -198,6 +200,14 @@ function parseStatement() {
 			}
 			break;
 
+		case T_TYPE.WHILE:
+			success = parseWhileIfStatement("WhileStatement");
+			break;
+
+		case T_TYPE.IF:
+			success = parseWhileIfStatement("IfStatement");
+			break;
+
 		default: // error case
 			outErrorExpected("Statement");
 			success = false;
@@ -208,6 +218,53 @@ function parseStatement() {
 		outVerbose(parseTabs() + "Found Statement");
 	} else {
 		outVerbose(parseTabs() + "Did not find Statement");
+	}
+
+	numTabs--;
+
+	return success;
+
+}
+
+function parseWhileIfStatement(statementType) {
+
+	var success = true;
+
+	outVerbose(parseTabs() + "Parsing " + statementType);
+	numTabs++;
+
+	success = parseBooleanExpr();
+
+	if(success) {
+
+		outVerbose(parseTabs() + "Expecting {");
+		numTabs++;
+
+		// should be {
+		nextToken();
+
+		// if it's not...
+		if(!(currToken().type === T_TYPE.BRACE && currToken().value === "{")) {
+
+			// throw an error
+			outErrorExpected("{");
+			success = false;
+
+		} else {
+			outVerbose(parseTabs() + "Found {");
+		}
+
+		numTabs--;
+
+	}
+
+	success = parseStatementList();
+
+	if(success) {
+		outCurrToken();
+		outVerbose(parseTabs() + "Found " + statementType);
+	} else {
+		outVerbose(parseTabs() + "Did not find " + statementType);
 	}
 
 	numTabs--;
@@ -352,6 +409,19 @@ function parseExpr() {
 			success = parseStringExpr();
 			break;
 
+		case T_TYPE.BRACE:
+			if(currToken().value === "(") {
+				success = parseBooleanExpr();
+			} else {
+				outErrorExpected("Expr");
+				success = false;
+			}
+			break;
+
+		case T_TYPE.BOOL:
+			success = parseBooleanExpr();
+			break;
+
 		case T_TYPE.ID:
 			outVerbose(parseTabs() + "Found identifier: " + currToken().value);
 			break;
@@ -421,13 +491,9 @@ function parseVarDecl() {
 	success = parseSingleToken(T_TYPE.ID, "identifier");
 
 	if(success) {
-
 		outVerbose(parseTabs() + "Found VarDecl");
-
 	} else {
-
 		outVerbose(parseTabs() + "Did not find VarDecl");
-
 	}
 
 	numTabs--;
@@ -506,6 +572,106 @@ function parseStringExpr() {
 		outVerbose(parseTabs() + "Found StringExpr");
 	} else {
 		outVerbose(parseTabs() + "Did not find StringExpr");
+	}
+
+	numTabs--;
+
+	return success;
+
+}
+
+function parseBooleanExpr() {
+
+	var success = true;
+
+	outVerbose(parseTabs() + "Parsing BooleanExpr");
+	numTabs++;
+
+	if(tokens[index+1].value === "true" || tokens[index+1].value === "false") {
+		nextToken();
+		outVerbose(parseTabs() + "Found " + currToken().value);
+		outVerbose(parseTabs() + "Found BooleanExpr");
+		numTabs--;
+		return success;
+	}
+
+	outVerbose(parseTabs() + "Expecting (");
+	numTabs++;
+
+	nextToken();
+
+	// if it's not...
+	if(!(currToken().type === T_TYPE.BRACE && currToken().value === "(")) {
+
+		// throw an error
+		outErrorExpected("(");
+		success = false;
+
+	} else {
+		outVerbose(parseTabs() + "Found (");
+	}
+
+	numTabs--;
+
+	if(success) {
+		success = parseExpr();
+	}
+
+	if(success) {
+
+		outVerbose(parseTabs() + "Expecting ==");
+		numTabs++;
+
+		nextToken();
+
+		// if it's not...
+		if(currToken().type !== T_TYPE.EQUALITY) {
+
+			// throw an error
+			outErrorExpected("==");
+			success = false;
+
+		} else {
+			outVerbose(parseTabs() + "Found ==");
+		}
+
+		numTabs--;
+
+	}
+
+	if(success) {
+		outVerbose(parseTabs() + "Expecting Expr");
+		numTabs++;
+		success = parseExpr();
+		numTabs--;
+	}
+
+	if(success) {
+
+		outVerbose(parseTabs() + "Expecting )");
+		numTabs++;
+
+		nextToken();
+
+		// if it's not...
+		if(!(currToken().type === T_TYPE.BRACE && currToken().value === ")")) {
+
+			// throw an error
+			numTabs--;
+			outErrorExpected(")");
+			success = false;
+
+		} else {
+			outVerbose(parseTabs() + "Found )");
+			numTabs--;
+		}
+
+	}
+
+	if(success) {
+		outVerbose(parseTabs() + "Found BooleanExpr");
+	} else {
+		outVerbose(parseTabs() + "Did not find BooleanExpr");
 	}
 
 	numTabs--;
