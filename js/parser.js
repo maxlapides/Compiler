@@ -233,7 +233,7 @@ function parseWhileIfStatement(statementType) {
 	outVerbose(parseTabs() + "Parsing " + statementType);
 	numTabs++;
 
-	success = parseBooleanExpr();
+	success = parseBooleanExpr(true);
 
 	if(success) {
 
@@ -419,7 +419,7 @@ function parseExpr() {
 			break;
 
 		case T_TYPE.BOOL:
-			success = parseBooleanExpr();
+			outVerbose(parseTabs() + "Found BooleanExpr");
 			break;
 
 		case T_TYPE.ID:
@@ -580,38 +580,41 @@ function parseStringExpr() {
 
 }
 
-function parseBooleanExpr() {
+function parseBooleanExpr(parseFirstParen) {
 
 	var success = true;
 
 	outVerbose(parseTabs() + "Parsing BooleanExpr");
 	numTabs++;
 
-	if(tokens[index+1].value === "true" || tokens[index+1].value === "false") {
-		nextToken();
+	if(currToken().value === "true" || currToken().value === "false") {
 		outVerbose(parseTabs() + "Found " + currToken().value);
 		outVerbose(parseTabs() + "Found BooleanExpr");
 		numTabs--;
 		return success;
 	}
 
-	outVerbose(parseTabs() + "Expecting (");
-	numTabs++;
+	if(parseFirstParen) {
 
-	nextToken();
+		outVerbose(parseTabs() + "Expecting (");
+		numTabs++;
 
-	// if it's not...
-	if(!(currToken().type === T_TYPE.BRACE && currToken().value === "(")) {
+		nextToken();
 
-		// throw an error
-		outErrorExpected("(");
-		success = false;
+		// if it's not...
+		if(!(currToken().type === T_TYPE.BRACE && currToken().value === "(")) {
 
-	} else {
-		outVerbose(parseTabs() + "Found (");
+			// throw an error
+			outErrorExpected("(");
+			success = false;
+
+		} else {
+			outVerbose(parseTabs() + "Found (");
+		}
+
+		numTabs--;
+
 	}
-
-	numTabs--;
 
 	if(success) {
 		success = parseExpr();

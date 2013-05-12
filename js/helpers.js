@@ -18,6 +18,7 @@ function reset() {
 	output.innerHTML = "";
 	parseTreeFbox.innerHTML = "";
 	abstractTreeFbox.innerHTML = "";
+	codeGenFbox.innerHTML = "";
 
 	// global variables
 	sourceCode = editor.getValue();
@@ -46,6 +47,11 @@ function reset() {
 	symbolTable = null;
 	curScopeId = 0;
 	uninitialized = [];
+
+	// code generation
+	execEnviro = [];
+	staticData = [];
+	jumps = [];
 
 }
 

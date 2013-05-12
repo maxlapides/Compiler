@@ -194,6 +194,12 @@ function SymbolTable() {
 
 		if(symbol.type !== expectedType) {
 
+			// if the symbol is a boolean, but we were expecting an int, that's okay because booleans have integer equivalents
+			// (note: the reverse is not true because for all integers i such that 0 < i > 1, there is no boolean equivalent)
+			if(symbol.type === "boolean" && expectedType === "int") {
+				return true;
+			}
+
 			if(!expectedType) {
 				error = "ERROR: cannot assign " + symbolToLookup.value + " to undeclared variable " + this.positionToString(symbolToLookup.position);
 			}
@@ -211,6 +217,8 @@ function SymbolTable() {
 			return false;
 		}
 
+		return true;
+
 	};
 
 	this.determineType = function(token) {
@@ -221,6 +229,10 @@ function SymbolTable() {
 
 		if(token === "int" || token.type === T_TYPE.OP || token.type === T_TYPE.DIGIT) {
 			return "int";
+		}
+
+		if(token === "equal?" || token.type === T_TYPE.BOOL) {
+			return "boolean";
 		}
 
 		if(token.type === T_TYPE.ID) {

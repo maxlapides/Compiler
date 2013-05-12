@@ -41,6 +41,11 @@ function startCompile() {
 		buildSymbolTable();
 	}
 
+	// if no errors, generate code
+	if(errorCount === 0) {
+		codeGeneration();
+	}
+
 	if(errorCount > 0) {
 		out("<br />Compilation failed :(");
 	} else {

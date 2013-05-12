@@ -33,6 +33,14 @@ $(document).ready(function() {
 	});
 });
 
+$(document).ready(function() {
+	$(".fancybox-small").fancybox({
+		width		: 190,
+		autoHeight	: true,
+		autoSize	: false
+	});
+});
+
 
 /*********************/
 /* !GLOBAL VARIABLES */
@@ -42,6 +50,7 @@ $(document).ready(function() {
 var output = document.getElementById("output");
 var parseTreeFbox = document.getElementById("parse-tree");
 var abstractTreeFbox = document.getElementById("abstract-tree");
+var codeGenFbox = document.getElementById("code-output");
 var space = "&nbsp;";
 var tab = "&nbsp;&nbsp;&nbsp;";
 var verboseCheck = document.getElementById("verbose");
@@ -75,6 +84,11 @@ var abstractTree;
 var symbolTable;
 var curScopeId;
 var uninitialized;
+
+// code generation
+var execEnviro;
+var staticData;
+var jumps;
 
 // pseudo-enumeration for token types
 var T_TYPE = {

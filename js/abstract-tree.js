@@ -180,10 +180,14 @@ function AbstractTree() {
 				break;
 
 			case "BooleanExpr":
-				this.startBranch("equal?");
-				this.traverseTree(treeRoot.children[1]);
-				this.traverseTree(treeRoot.children[3]);
-				this.endBranch();
+				if(treeRoot.children[1]) {
+					this.startBranch("equal?");
+					this.traverseTree(treeRoot.children[1]);
+					this.traverseTree(treeRoot.children[3]);
+					this.endBranch();
+				} else {
+					this.traverseTree(treeRoot.children[0]);
+				}
 				break;
 
 			case "CharList":
