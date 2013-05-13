@@ -186,9 +186,13 @@ function getTest5() {
 
 	testProgram  = "{\n";
 	testProgram += "\tint a\n";
-	testProgram += "\ta = 3\n";
-	testProgram += "\ta = 1 + 2 + a\n";
-	testProgram += "\tprint(a)\n";
+	testProgram += "\ta = 6\n";
+	testProgram += "\tif(a == 2 + 4) {\n";
+	testProgram += "\t\tprint(\"hip hip \")\n";
+	testProgram += "\t}\n";
+	testProgram += "\tif(5 + 4 == 7 + 2) {\n";
+	testProgram += "\t\tprint(\"hooray\")\n";
+	testProgram += "\t}\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -207,6 +211,10 @@ function getTest6() {
 	testProgram += "\tif(a == b) {\n";
 	testProgram += "\t\tprint(\"meow\")\n";
 	testProgram += "\t}\n";
+	testProgram += "\tint c\n";
+	testProgram += "\tc = 3\n";
+	testProgram += "\tc = 1 + 2 + c\n";
+	testProgram += "\tprint(c)\n";
 	testProgram += "} $";
 
 	return testProgram;

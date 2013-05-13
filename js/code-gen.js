@@ -261,13 +261,24 @@ function CodeGen() {
 		// operation
 		else {
 			this.traverseTree(treeRoot);
-			if(print) { // move sum from accumulator to Y register
+
+			// move sum to Y or X register
+			if(yReg || xReg) {
 				this.push(STORE);
 				this.pushCurTemp();
 				this.addStaticData(false, "int");
+			}
+
+			if(yReg) {
 				this.push(LOADY_MEM);
+			} else if(xReg) {
+				this.push(LOADX_MEM);
+			}
+
+			if(yReg || xReg) {
 				this.pushTemp(this.autoStaticDataId);
 			}
+
 		}
 
 	};
@@ -404,6 +415,11 @@ function CodeGen() {
 					boolStatement.reverse();
 				}
 
+				// optimization: if the IF statement is in the form "DIGIT == OP", flip them
+				if(boolStatement[0].token.type === T_TYPE.DIGIT && boolStatement[1].token.type === T_TYPE.OP) {
+					boolStatement.reverse();
+				}
+
 				switch(boolStatement[0].token.type) {
 
 					case T_TYPE.ID:
@@ -427,6 +443,10 @@ function CodeGen() {
 						} else {
 							this.pushNum(0);
 						}
+						break;
+
+					case T_TYPE.OP:
+						this.exprHelper(boolStatement[0], false, true);
 						break;
 
 					default:
@@ -468,6 +488,15 @@ function CodeGen() {
 							this.pushNum(0);
 						}
 
+						this.push(STORE);
+						this.pushCurTemp();
+						this.addStaticData(false, "int");
+						this.push(COMPARE);
+						this.pushTemp(this.autoStaticDataId);
+						break;
+
+					case T_TYPE.OP:
+						this.exprHelper(boolStatement[1]);
 						this.push(STORE);
 						this.pushCurTemp();
 						this.addStaticData(false, "int");

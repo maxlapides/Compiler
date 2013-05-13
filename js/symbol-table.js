@@ -293,6 +293,40 @@ function SymbolTable() {
 			case "equal?":
 				var esymbol;
 				var lastType = false;
+
+				// if the two children nodes aren't of the same type
+				if(treeRoot.children[0].token.type !== treeRoot.children[1].token.type) {
+
+					// this is allowed when one of the nodes is an ID (to be tested below) or BOOL == equal? or when DIGIT == IntExpr
+					// for example: if(true == (a == b)) or if(5 == 2 + 3)
+					if( treeRoot.children[0].token.type !== T_TYPE.ID && treeRoot.children[1].token.type !== T_TYPE.ID &&
+						!(treeRoot.children[0].token.type === T_TYPE.BOOL && treeRoot.children[1].token === "equal?") &&
+						!(treeRoot.children[1].token.type === T_TYPE.BOOL && treeRoot.children[0].token === "equal?") &&
+						!(treeRoot.children[0].token.type === T_TYPE.DIGIT && treeRoot.children[1].token.type === T_TYPE.OP) &&
+						!(treeRoot.children[1].token.type === T_TYPE.DIGIT && treeRoot.children[0].token.type === T_TYPE.OP) ) {
+
+						var type1 = getTokenType(treeRoot.children[0].token.type);
+						var type2 = getTokenType(treeRoot.children[1].token.type);
+						if(!type1) {
+							type1 = treeRoot.children[0].token;
+							if(type1 === "equal?") {
+								type1 = "BooleanExpr";
+							}
+						}
+						if(!type2) {
+							type2 = treeRoot.children[1].token;
+							if(type2 === "equal?") {
+								type2 = "BooleanExpr";
+							}
+						}
+
+						outError(parseTabs() + "ERROR: cannot compare a " + type1 + " to a " + type2 + this.positionToString(treeRoot.children[0].token.position));
+						break;
+
+					}
+
+				}
+
 				for(var i = 0; i < 2; i++) {
 					if(treeRoot.children[i].token.type === T_TYPE.ID) {
 						esymbol = this.lookupSymbol(treeRoot.children[i].token.value);

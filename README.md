@@ -7,4 +7,4 @@ To see live version, visit http://maxlapides.com/compiler/
 
 Tested to work in Safari and Chrome.
 
-Test cases are included in compiler. Red buttons are tests that cause errors, green buttons are tests that succeed.
+Test cases are included in compiler.
