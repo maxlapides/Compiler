@@ -201,13 +201,16 @@ function CodeGen() {
 
 	};
 
-	this.exprHelper = function(treeRoot, print) {
+	this.exprHelper = function(treeRoot, yReg, xReg) {
 
 		var EXPR_LOAD_CONST = LOAD_CONST;
 		var EXPR_LOAD_MEM = LOAD_MEM;
-		if(print) {
+		if(yReg) {
 			EXPR_LOAD_CONST = LOADY_CONST;
 			EXPR_LOAD_MEM = LOADY_MEM;
+		} else if(xReg) {
+			EXPR_LOAD_CONST = LOADX_CONST;
+			EXPR_LOAD_MEM = LOADX_MEM;
 		}
 
 		// string
@@ -242,11 +245,11 @@ function CodeGen() {
 		else if(treeRoot.token === "equal?") {
 			this.traverseTree(treeRoot);
 
-			// load 1 (assume false)
+			// load 0 (assume false)
 			this.push(EXPR_LOAD_CONST);
 			this.pushNum(0);
 
-			// if comparison resulted in false, branch
+			// if comparison resulted is false, branch
 			this.push(BRANCH);
 			this.pushNum(2);
 
@@ -258,8 +261,29 @@ function CodeGen() {
 		// operation
 		else {
 			this.traverseTree(treeRoot);
+			if(print) { // move sum from accumulator to Y register
+				this.push(STORE);
+				this.pushCurTemp();
+				this.addStaticData(false, "int");
+				this.push(LOADY_MEM);
+				this.pushTemp(this.autoStaticDataId);
+			}
 		}
 
+	};
+
+	this.boolStatementError = function(statement) {
+		var tokenType = getTokenType(statement.token.type);
+		if(!tokenType) { tokenType = statement.token; }
+		if(tokenType === "ID") {
+			tokenType = this.getTempById(statement.token.value, true).type;
+		}
+
+		var errorPos = this.positionToString(statement.token.position);
+		if(!errorPos) {
+			errorPos = this.positionToString(statement.children[0].token.position);
+		}
+		outError("ERROR: cannot compare a " + tokenType + errorPos);
 	};
 
 	this.traverseTree = function(treeRoot) {
@@ -324,7 +348,7 @@ function CodeGen() {
 				for(var i = str.length - 1; i >= 0; i--) {
 					if(str[i].token.value) {
 						execEnviro[--this.stackPos] = toHex(str[i].token.value);
-					} else {
+					} else if(str[i].token.type === T_TYPE.SPACE) {
 						execEnviro[--this.stackPos] = toHex(" ");
 					}
 				}
@@ -383,8 +407,12 @@ function CodeGen() {
 				switch(boolStatement[0].token.type) {
 
 					case T_TYPE.ID:
-						this.push(LOADX_MEM);
-						this.pushTemp(boolStatement[0].token.value);
+						if(this.getTempById(boolStatement[0].token.value, true).type === "int") {
+							this.push(LOADX_MEM);
+							this.pushTemp(boolStatement[0].token.value);
+						} else {
+							this.boolStatementError(boolStatement[0]);
+						}
 						break;
 
 					case T_TYPE.DIGIT:
@@ -402,23 +430,23 @@ function CodeGen() {
 						break;
 
 					default:
-						var tokenType = getTokenType(boolStatement[0].token.type);
-						if(!tokenType) {
-							tokenType = boolStatement[0].token;
+						if(boolStatement[0].token === "equal?") {
+							this.exprHelper(boolStatement[0], false, true);
+						} else {
+							this.boolStatementError(boolStatement[0]);
 						}
-						var errorPos = this.positionToString(boolStatement[0].token.position);
-						if(!errorPos) {
-							errorPos = this.positionToString(boolStatement[0].children[0].token.position);
-						}
-						outError("ERROR: cannot compare a " + tokenType + errorPos);
 						break;
 				}
 
 				switch(boolStatement[1].token.type) {
 
 					case T_TYPE.ID:
-						this.push(COMPARE);
-						this.pushTemp(boolStatement[1].token.value);
+						if(this.getTempById(boolStatement[1].token.value, true).type === "int") {
+							this.push(COMPARE);
+							this.pushTemp(boolStatement[1].token.value);
+						} else {
+							this.boolStatementError(boolStatement[1]);
+						}
 						break;
 
 					case T_TYPE.DIGIT:
@@ -448,15 +476,11 @@ function CodeGen() {
 						break;
 
 					default:
-						var tokenType2 = getTokenType(boolStatement[1].token.type);
-						if(!tokenType2) {
-							tokenType2 = boolStatement[1].token;
+						if(boolStatement[1].token === "equal?") {
+							this.exprHelper(boolStatement[1]);
+						} else {
+							this.boolStatementError(boolStatement[1]);
 						}
-						var errorPos2 = this.positionToString(boolStatement[1].token.position);
-						if(!errorPos2) {
-							errorPos2 = this.positionToString(boolStatement[1].children[0].token.position);
-						}
-						outError("ERROR: cannot compare a " + tokenType2 + errorPos2);
 						break;
 
 				}
@@ -476,12 +500,6 @@ function CodeGen() {
 						this.traverseTree(treeRoot.children[1]);
 					}
 
-					// identifier
-					else if(treeRoot.children[1].token.type === T_TYPE.ID) {
-						this.push(LOAD_MEM);
-						this.pushTemp(treeRoot.children[1].token.value);
-					}
-
 					// digit
 					else if(treeRoot.children[1].token.type === T_TYPE.DIGIT) {
 						this.push(LOAD_CONST);
@@ -498,21 +516,28 @@ function CodeGen() {
 						}
 					}
 
-					else {
+					// otherwise (not identifier)
+					else if(treeRoot.children[1].token.type !== T_TYPE.ID) {
 						outError("ERROR: cannot add a " + getTokenType(treeRoot.children[1].token.type));
 					}
 
-					// the value of the second branch should now be in the accumulator
-					// save this value in memory
-					this.push(STORE);
-					this.pushCurTemp();
-					this.addStaticData(false, "int");
+					// the value of the second branch should now be in the accumulator, save this value in memory
+					// not necessary if we're simply loading an identifier because this is already stored in memory
+					if(treeRoot.children[1].token.type !== T_TYPE.ID) {
+						this.push(STORE);
+						this.pushCurTemp();
+						this.addStaticData(false, "int");
+					}
 
 					// add the value of branch 1 to branch 2
 					this.push(LOAD_CONST);
 					this.pushNum(treeRoot.children[0].token.value);
 					this.push(ADD);
-					this.pushTemp(this.autoStaticDataId);
+					if(treeRoot.children[1].token.type !== T_TYPE.ID) {
+						this.pushTemp(this.autoStaticDataId);
+					} else {
+						this.pushTemp(treeRoot.children[1].token.value);
+					}
 
 				} else {
 					this.recurseThroughChildren(treeRoot);
@@ -608,11 +633,6 @@ function codeGeneration() {
 	// print generated code, separated by spaces, in the Fancybox
 	codeGenFbox.innerHTML = execEnviro.join(" ");
 
-	console.log(abstractTree);
-	console.log(staticData);
-	console.log(jumps);
-	console.log(c);
-
 	// catch errors!
 
 	// plural or singular warning?
@@ -635,16 +655,19 @@ function codeGeneration() {
 		} else {
 			out(tab + errorCount + " " + error + " found. Halting compiling.");
 		}
-
-	} else if(warningCount > 0) {
-
-		out(tab + '<a class="fancybox-small" href="#code-output">Click here for generated code</a>');
-		out(tab + "Code generation successful, but found " + warningCount + " " + warning + ".");
-
 	} else {
 
-		out(tab + '<a class="fancybox-small" href="#code-output">Click here for generated code</a>');
-		out(tab + "Code generation successful!");
+		if(execEnviro[0] === "00") {
+			out(tab + "No code generated.");
+		} else {
+			out(tab + '<a class="fancybox-small" href="#code-output">Click here for generated code</a>');
+		}
+
+		if(warningCount > 0) {
+			out(tab + "Code generation successful, but found " + warningCount + " " + warning + ".");
+		} else {
+			out(tab + "Code generation successful!");
+		}
 
 	}
 

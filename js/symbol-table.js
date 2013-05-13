@@ -194,14 +194,12 @@ function SymbolTable() {
 
 		if(symbol.type !== expectedType) {
 
-			// if the symbol is a boolean, but we were expecting an int, that's okay because booleans have integer equivalents
-			// (note: the reverse is not true because for all integers i such that 0 < i > 1, there is no boolean equivalent)
-			if(symbol.type === "boolean" && expectedType === "int") {
-				return true;
-			}
-
 			if(!expectedType) {
 				error = "ERROR: cannot assign " + symbolToLookup.value + " to undeclared variable " + this.positionToString(symbolToLookup.position);
+			}
+
+			else if(inOpSubtree && symbol.type === "boolean") {
+				error = "ERROR (type mismatch): cannot perform an operation on boolean " + symbolToLookup.value + this.positionToString(symbolToLookup.position);
 			}
 
 			else if(inOpSubtree) {
@@ -294,9 +292,18 @@ function SymbolTable() {
 
 			case "equal?":
 				var esymbol;
+				var lastType = false;
 				for(var i = 0; i < 2; i++) {
 					if(treeRoot.children[i].token.type === T_TYPE.ID) {
 						esymbol = this.lookupSymbol(treeRoot.children[i].token.value);
+
+						// catch error: compared types do not match
+						if(lastType && lastType !== esymbol.type) {
+							outError(parseTabs() + "ERROR: cannot compare a " + lastType + " to a " + esymbol.type + this.positionToString(treeRoot.children[i].token.position));
+						}
+						lastType = esymbol.type;
+
+						// catch error: variable undeclared/uninitialized
 						if(!esymbol) {
 							outError(parseTabs() + "ERROR: cannot check equality of an undeclared variable" + this.positionToString(treeRoot.children[i].token.position));
 						} else if(!esymbol.initialized) {
