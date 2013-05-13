@@ -75,16 +75,22 @@ function getTest1() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tint i\n";
-	testProgram += "\tstring i\n";
-	testProgram += "\tstring c\n";
+	testProgram += "\tint a\n";
+	testProgram += "\ta = 1\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\tc = \"xyz\"\n";
+	testProgram += "\t\tint a\n";
+	testProgram += "\t\ta = 2\n";
+	testProgram += "\t\tprint(a)\n";
 	testProgram += "\t}\n";
-	testProgram += "\t{ { { c = 3 } } }\n";
-	testProgram += "\tprint(i)\n";
-	testProgram += "\tprint(c)\n";
-	testProgram += "\tprint(\"done\")\n";
+	testProgram += "\tstring b\n";
+	testProgram += "\tb = \"alan\"\n";
+	testProgram += "\tif(a == 1) {\n";
+	testProgram += "\t\tprint(b)\n";
+	testProgram += "\t}\n";
+	testProgram += "\tstring c\n";
+	testProgram += "\tc = \"james\"\n";
+	testProgram += "\tb = \"blackstone\"\n";
+	testProgram += "\tprint(b)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -96,12 +102,25 @@ function getTest2() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tint x\n";
-	testProgram += "\tx = 4 + y\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\tstring y\n";
-	testProgram += "\t\ty = \"yaycs\"\n";
-	testProgram += "\t\tprint(y)\n";
+	testProgram += "\tint a\n";
+	testProgram += "\tint b\n";
+	testProgram += "\tint c\n";
+	testProgram += "\ta = 1\n";
+	testProgram += "\tb = 1\n";
+	testProgram += "\tc = 1\n";
+	testProgram += "\twhile(a == 1) {\n";
+	testProgram += "\t\tprint(\"loop \")\n";
+	testProgram += "\t\tprint(b)\n";
+	testProgram += "\t\tif(c == 2) {\n";
+	testProgram += "\t\t\ta = 2\n";
+	testProgram += "\t\t}\n";
+	testProgram += "\t\tif(b == 2) {\n";
+	testProgram += "\t\t\tb = 3\n";
+	testProgram += "\t\t\tc = 2\n";
+	testProgram += "\t\t}\n";
+	testProgram += "\t\tif(b == 1) {\n";
+	testProgram += "\t\t\tb = 2\n";
+	testProgram += "\t\t}\n";
 	testProgram += "\t}\n";
 	testProgram += "} $";
 
@@ -114,17 +133,21 @@ function getTest3() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tint i\n";
-	testProgram += "\ti = 7\n";
-	testProgram += "\ti = 8\n";
+	testProgram += "\tint a\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\ti = 1 + i\n";
+	testProgram += "\t\tint a\n";
+	testProgram += "\t\ta = 3\n";
+	testProgram += "\t\tprint(a)\n";
 	testProgram += "\t}\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\tstring i\n";
-	testProgram += "\t\ti = 2 + i\n";
+	testProgram += "\t\tint a\n";
+	testProgram += "\t\ta = 4\n";
+	testProgram += "\t\tprint(a)\n";
 	testProgram += "\t}\n";
-	testProgram += "\tprint(i)\n";
+	testProgram += "\t{\n";
+	testProgram += "\t\ta = 5\n";
+	testProgram += "\t}\n";
+	testProgram += "\tprint(a)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -136,27 +159,21 @@ function getTest4() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tstring a\n";
+	testProgram += "\tint a\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\tint a\n";
 	testProgram += "\t\ta = 2\n";
-	testProgram += "\t\tstring c\n";
-	testProgram += "\t\t{\n";
-	testProgram += "\t\t\tc = \"meow\"\n";
-	testProgram += "\t\t\ta = \"abc\"\n";
-	testProgram += "\t\t}\n";
-	testProgram += "\t}\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\ta = \"woah\"\n";
 	testProgram += "\t\tint a\n";
-	testProgram += "\t\ta = 3\n";
 	testProgram += "\t\t{\n";
+	testProgram += "\t\t\tstring c\n";
 	testProgram += "\t\t\t{\n";
-	testProgram += "\t\t\t\tint z\n";
-	testProgram += "\t\t\t\tz = 7\n";
+	testProgram += "\t\t\t\ta = 5\n";
+	testProgram += "\t\t\t\tc = \"hello\"\n";
 	testProgram += "\t\t\t}\n";
+	testProgram += "\t\t\tprint(c)\n";
 	testProgram += "\t\t}\n";
+	testProgram += "\t\tprint(a)\n";
 	testProgram += "\t}\n";
+	testProgram += "\tprint(a)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -168,16 +185,10 @@ function getTest5() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tint i\n";
-	testProgram += "\tstring c\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\ti = 1\n";
-	testProgram += "\t\tc = \"xyz\"\n";
-	testProgram += "\t}\n";
-	testProgram += "\t{ { { } } }\n";
-	testProgram += "\tprint(i)\n";
-	testProgram += "\tprint(c)\n";
-	testProgram += "\tprint(\"done\")\n";
+	testProgram += "\tint a\n";
+	testProgram += "\ta = 3\n";
+	testProgram += "\ta = 1 + 2 + a\n";
+	testProgram += "\tprint(a)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -189,14 +200,12 @@ function getTest6() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tint x\n";
-	testProgram += "\tint y\n";
-	testProgram += "\ty = 3\n";
-	testProgram += "\tx = 4 + y\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\tstring y\n";
-	testProgram += "\t\ty = \"yaycs\"\n";
-	testProgram += "\t\tprint(y)\n";
+	testProgram += "\tboolean a\n";
+	testProgram += "\ta = (1 == 2)\n";
+	testProgram += "\tboolean b\n";
+	testProgram += "\tb = false\n";
+	testProgram += "\tif(a == b) {\n";
+	testProgram += "\t\tprint(\"meow\")\n";
 	testProgram += "\t}\n";
 	testProgram += "} $";
 
@@ -209,17 +218,20 @@ function getTest7() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tint i\n";
-	testProgram += "\ti = 7\n";
-	testProgram += "\ti = 8\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\ti = 1 + i\n";
+	testProgram += "\tboolean a\n";
+	testProgram += "\ta = (true == (2 == 2))\n";
+	testProgram += "\tif(a == true) {\n";
+	testProgram += "\t\tprint(\"yay\")\n";
 	testProgram += "\t}\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\tstring i\n";
-	testProgram += "\t\ti = \"stringy\"\n";
+	testProgram += "\t\tint x\n";
+	testProgram += "\t\tint y\n";
+	testProgram += "\t\tx = 5\n";
+	testProgram += "\t\ty = 6\n";
+	testProgram += "\t\tif((x == y) == false) {\n";
+	testProgram += "\t\t\tprint(\"hooray\")\n";
+	testProgram += "\t\t}\n";
 	testProgram += "\t}\n";
-	testProgram += "\tprint(i)\n";
 	testProgram += "} $";
 
 	return testProgram;
@@ -231,25 +243,16 @@ function getTest8() {
 	var testProgram;
 
 	testProgram  = "{\n";
-	testProgram += "\tstring a\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\tint a\n";
-	testProgram += "\t\ta = 2\n";
-	testProgram += "\t\tstring c\n";
-	testProgram += "\t\t{\n";
-	testProgram += "\t\t\tc = \"meow\"\n";
+	testProgram += "\tint i\n";
+	testProgram += "\ti = 1\n";
+	testProgram += "\twhile((i == 8) == false) {\n";
+	testProgram += "\t\tif(i == 1) {\n";
+	testProgram += "\t\t\tprint(\"begin \")\n";
 	testProgram += "\t\t}\n";
-	testProgram += "\t}\n";
-	testProgram += "\t{\n";
-	testProgram += "\t\ta = \"woah\"\n";
-	testProgram += "\t\tint a\n";
-	testProgram += "\t\ta = 3\n";
-	testProgram += "\t\t{\n";
-	testProgram += "\t\t\t{\n";
-	testProgram += "\t\t\t\tint z\n";
-	testProgram += "\t\t\t\tz = 7\n";
-	testProgram += "\t\t\t}\n";
-	testProgram += "\t\t}\n";
+	testProgram += "\t\tprint(\"loop \")\n";
+	testProgram += "\t\tprint(i)\n";
+	testProgram += "\t\tprint(\" \")\n";
+	testProgram += "\t\ti = 1 + i\n";
 	testProgram += "\t}\n";
 	testProgram += "} $";
 
