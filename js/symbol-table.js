@@ -245,6 +245,10 @@ function SymbolTable() {
 				return "string";
 			}
 
+			else if(symTabEntry && symTabEntry.type === "boolean") {
+				return "boolean";
+			}
+
 			else {
 				return false;
 			}
