@@ -292,6 +292,7 @@ function SymbolTable() {
 
 			case "equal?":
 				var esymbol;
+				var curType;
 				var lastType = false;
 
 				// if the two children nodes aren't of the same type
@@ -327,46 +328,49 @@ function SymbolTable() {
 
 				}
 
-				var equalChecker = treeRoot.children;
-				if(equalChecker[0].token.type === T_TYPE.ID) {
-					equalChecker.reverse();
-				}
-
 				for(var i = 0; i < 2; i++) {
-					if(equalChecker[i].token.type === T_TYPE.ID) {
-						esymbol = this.lookupSymbol(equalChecker[i].token.value);
+					if(treeRoot.children[i].token.type === T_TYPE.ID) {
+						esymbol = this.lookupSymbol(treeRoot.children[i].token.value);
 
 						// catch error: compared types do not match
 						if(lastType && lastType !== esymbol.type) {
-							outError(parseTabs() + "ERROR: cannot compare a " + lastType + " to a " + esymbol.type + this.positionToString(equalChecker[i].token.position));
+							outError(parseTabs() + "ERROR: cannot compare a " + lastType + " to a " + esymbol.type + this.positionToString(treeRoot.children[i].token.position));
 						}
 						lastType = esymbol.type;
 
 						// catch error: variable undeclared/uninitialized
 						if(!esymbol) {
-							outError(parseTabs() + "ERROR: cannot check equality of an undeclared variable" + this.positionToString(equalChecker[i].token.position));
+							outError(parseTabs() + "ERROR: cannot check equality of an undeclared variable" + this.positionToString(treeRoot.children[i].token.position));
 						} else if(!esymbol.initialized) {
-							outError(parseTabs() + "ERROR: cannot check equality of an uninitialized variable" + this.positionToString(equalChecker[i].token.position));
+							outError(parseTabs() + "ERROR: cannot check equality of an uninitialized variable" + this.positionToString(treeRoot.children[i].token.position));
 						}
 
 					} else {
-						switch(equalChecker[i].token.type) {
+						switch(treeRoot.children[i].token.type) {
 							case T_TYPE.DIGIT:
-								lastType = "int";
+								curType = "int";
 								break;
 							case T_TYPE.OP:
-								lastType = "int";
+								curType = "int";
 								break;
 							case T_TYPE.BOOL:
-								lastType = "boolean";
+								curType = "boolean";
 								break;
 							default:
-								if(equalChecker[i].token === "equal?") {
-									lastType = "boolean";
+								if(treeRoot.children[i].token === "equal?") {
+									curType = "boolean";
 								}
 								break;
 						}
-						this.traverseTree(equalChecker[i]);
+
+						// catch error: compared types do not match
+						if(lastType && lastType !== curType) {
+							outError(parseTabs() + "ERROR: cannot compare a " + lastType + " to a " + curType + this.positionToString(treeRoot.children[i].token.position));
+						}
+
+						lastType = curType;
+
+						this.traverseTree(treeRoot.children[i]);
 					}
 				}
 				break;
