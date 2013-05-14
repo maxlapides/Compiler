@@ -327,24 +327,30 @@ function SymbolTable() {
 
 				}
 
+				var equalChecker = treeRoot.children;
+				if(equalChecker[0].token.type === T_TYPE.ID) {
+					equalChecker.reverse();
+				}
+
 				for(var i = 0; i < 2; i++) {
-					if(treeRoot.children[i].token.type === T_TYPE.ID) {
-						esymbol = this.lookupSymbol(treeRoot.children[i].token.value);
+					if(equalChecker[i].token.type === T_TYPE.ID) {
+						esymbol = this.lookupSymbol(equalChecker[i].token.value);
 
 						// catch error: compared types do not match
 						if(lastType && lastType !== esymbol.type) {
-							outError(parseTabs() + "ERROR: cannot compare a " + lastType + " to a " + esymbol.type + this.positionToString(treeRoot.children[i].token.position));
+							outError(parseTabs() + "ERROR: cannot compare a " + lastType + " to a " + esymbol.type + this.positionToString(equalChecker[i].token.position));
 						}
 						lastType = esymbol.type;
 
 						// catch error: variable undeclared/uninitialized
 						if(!esymbol) {
-							outError(parseTabs() + "ERROR: cannot check equality of an undeclared variable" + this.positionToString(treeRoot.children[i].token.position));
+							outError(parseTabs() + "ERROR: cannot check equality of an undeclared variable" + this.positionToString(equalChecker[i].token.position));
 						} else if(!esymbol.initialized) {
-							outError(parseTabs() + "ERROR: cannot check equality of an uninitialized variable" + this.positionToString(treeRoot.children[i].token.position));
+							outError(parseTabs() + "ERROR: cannot check equality of an uninitialized variable" + this.positionToString(equalChecker[i].token.position));
 						}
+
 					} else {
-						switch(treeRoot.children[i].token.type) {
+						switch(equalChecker[i].token.type) {
 							case T_TYPE.DIGIT:
 								lastType = "int";
 								break;
@@ -355,12 +361,12 @@ function SymbolTable() {
 								lastType = "boolean";
 								break;
 							default:
-								if(treeRoot.children[i].token === "equal?") {
+								if(equalChecker[i].token === "equal?") {
 									lastType = "boolean";
 								}
 								break;
 						}
-						this.traverseTree(treeRoot.children[i]);
+						this.traverseTree(equalChecker[i]);
 					}
 				}
 				break;
