@@ -344,6 +344,22 @@ function SymbolTable() {
 							outError(parseTabs() + "ERROR: cannot check equality of an uninitialized variable" + this.positionToString(treeRoot.children[i].token.position));
 						}
 					} else {
+						switch(treeRoot.children[i].token.type) {
+							case T_TYPE.DIGIT:
+								lastType = "int";
+								break;
+							case T_TYPE.OP:
+								lastType = "int";
+								break;
+							case T_TYPE.BOOL:
+								lastType = "boolean";
+								break;
+							default:
+								if(treeRoot.children[i].token === "equal?") {
+									lastType = "boolean";
+								}
+								break;
+						}
 						this.traverseTree(treeRoot.children[i]);
 					}
 				}
