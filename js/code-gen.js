@@ -439,7 +439,8 @@ function CodeGen() {
 				}
 
 				// necessary (otherwise the X register gets overwritten and things get complicated)
-				if(boolStatement[0].token.type === T_TYPE.BOOL && boolStatement[1].token === "equal?") {
+				if( (boolStatement[0].token.type === T_TYPE.BOOL && boolStatement[1].token === "equal?") ||
+					(boolStatement[0].token.type === T_TYPE.ID && boolStatement[1].token === "equal?")) {
 					boolStatement.reverse();
 				}
 
