@@ -178,7 +178,19 @@ function CodeGen() {
 
 	this.whileIfHelper = function(treeRoot, whileLoop) {
 
-		this.traverseTree(treeRoot.children[0]);
+		if(treeRoot.children[0].token.type === T_TYPE.BOOL) {
+			this.push(LOADX_CONST);
+			if(treeRoot.children[0].token.value === "true") {
+				this.push("00");
+			} else {
+				this.push("01");
+			}
+			this.push(COMPARE);
+			this.push(toHex(95));
+			this.push("00");
+		} else {
+			this.traverseTree(treeRoot.children[0]);
+		}
 
 		this.push(BRANCH);
 		this.push(this.getCurTempJump());
@@ -451,11 +463,23 @@ function CodeGen() {
 
 					default:
 						if(boolStatement[0].token === "equal?") {
-							this.exprHelper(boolStatement[0], false, true);
+							if(boolStatement[1].token === "equal?") {
+								this.exprHelper(boolStatement[0]);
+							} else {
+								this.exprHelper(boolStatement[0], false, true);
+							}
 						} else {
 							this.boolStatementError(boolStatement[0]);
 						}
 						break;
+				}
+
+				var firstEqualAddress;
+				if(boolStatement[0].token === "equal?" && boolStatement[1].token === "equal?") {
+					this.push(STORE);
+					this.pushCurTemp();
+					this.addStaticData(false, "int");
+					firstEqualAddress = this.autoStaticDataId;
 				}
 
 				switch(boolStatement[1].token.type) {
@@ -506,12 +530,21 @@ function CodeGen() {
 
 					default:
 						if(boolStatement[1].token === "equal?") {
-							this.exprHelper(boolStatement[1]);
+							if(boolStatement[0].token === "equal?") {
+								this.exprHelper(boolStatement[1], false, true);
+							} else {
+								this.exprHelper(boolStatement[1]);
+							}
 						} else {
 							this.boolStatementError(boolStatement[1]);
 						}
 						break;
 
+				}
+
+				if(boolStatement[0].token === "equal?" && boolStatement[1].token === "equal?") {
+					this.push(COMPARE);
+					this.pushTemp(firstEqualAddress);
 				}
 
 				break;

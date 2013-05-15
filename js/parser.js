@@ -587,7 +587,8 @@ function parseBooleanExpr(parseFirstParen) {
 	outVerbose(parseTabs() + "Parsing BooleanExpr");
 	numTabs++;
 
-	if(currToken().value === "true" || currToken().value === "false") {
+	if(tokens[index+1].type === T_TYPE.BOOL) {
+		nextToken();
 		outVerbose(parseTabs() + "Found " + currToken().value);
 		outVerbose(parseTabs() + "Found BooleanExpr");
 		numTabs--;
