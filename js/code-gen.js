@@ -56,7 +56,7 @@ function CodeGen() {
 	this.scopeRoot = new CodeGenScope();
 	this.curScope = this.scopeRoot;
 
-	this.getTempById = function(id, fullRecord) {
+	this.getTempById = function(id, fullRecord, autoInit) {
 
 		var staticDataEntry = false;
 		var parentScopeExists = true;
@@ -69,6 +69,7 @@ function CodeGen() {
 			for(var i = 0; i < staticData.length; i++) {
 				if(staticData[i].id === id && staticData[i].scope === currentScope.id) {
 					staticDataEntry = staticData[i];
+					if(autoInit) { staticData[i].init = true; }
 					break;
 				}
 			}
@@ -110,12 +111,12 @@ function CodeGen() {
 		return "J" + jumps.length;
 	};
 
-	this.pushTemp = function(id) {
+	this.pushTemp = function(id, autoInit) {
 
 		var temp;
 
 		if(id !== undefined) {
-			temp = this.getTempById(id);
+			temp = this.getTempById(id, false, autoInit);
 		} else {
 			temp = this.getCurTemp();
 		}
@@ -149,7 +150,8 @@ function CodeGen() {
 			temp	: this.getCurTemp(),
 			id		: id,
 			type    : type,
-			scope	: this.curScope.id
+			scope	: this.curScope.id,
+			init	: false
 		});
 	};
 
@@ -351,9 +353,13 @@ function CodeGen() {
 				break;
 
 			case "assign":
-				this.exprHelper(treeRoot.children[1]);
-				this.push(STORE);
-				this.pushTemp(treeRoot.children[0].token.value);
+				var thisTemp = this.getTempById(treeRoot.children[0].token.value, true);
+				// optimization: no need to store zeros
+				if(thisTemp.init || !(treeRoot.children[1].token.value === 0 || treeRoot.children[1].token.value === "false")) {
+					this.exprHelper(treeRoot.children[1]);
+					this.push(STORE);
+					this.pushTemp(treeRoot.children[0].token.value, true);
+				}
 				break;
 
 			case "string":
@@ -724,11 +730,7 @@ function codeGeneration() {
 		}
 	} else {
 
-		if(execEnviro[0] === "00") {
-			out(tab + "No code generated.");
-		} else {
-			out(tab + '<a class="fancybox-small" href="#code-output">Click here for generated code</a>');
-		}
+		out(tab + '<a class="fancybox-small" href="#code-output">Click here for generated code</a>');
 
 		if(warningCount > 0) {
 			out(tab + "Code generation successful, but found " + warningCount + " " + warning + ".");
