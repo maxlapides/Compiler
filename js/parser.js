@@ -587,38 +587,42 @@ function parseBooleanExpr(parseFirstParen) {
 	outVerbose(parseTabs() + "Parsing BooleanExpr");
 	numTabs++;
 
-	if(tokens[index+1].type === T_TYPE.BOOL) {
+	if(tokens[index+1].type === T_TYPE.BOOL && tokens[index+2].type !== T_TYPE.EQUALITY) {
 		nextToken();
 		outVerbose(parseTabs() + "Found " + currToken().value);
 		outVerbose(parseTabs() + "Found BooleanExpr");
 		numTabs--;
 		return success;
-	}
+	} else if(tokens[index+1].type === T_TYPE.BOOL) {
+		success = parseExpr();
+	} else {
 
-	if(parseFirstParen) {
+		if(parseFirstParen) {
 
-		outVerbose(parseTabs() + "Expecting (");
-		numTabs++;
+			outVerbose(parseTabs() + "Expecting (");
+			numTabs++;
 
-		nextToken();
+			nextToken();
 
-		// if it's not...
-		if(!(currToken().type === T_TYPE.BRACE && currToken().value === "(")) {
+			// if it's not...
+			if(!(currToken().type === T_TYPE.BRACE && currToken().value === "(")) {
 
-			// throw an error
-			outErrorExpected("(");
-			success = false;
+				// throw an error
+				outErrorExpected("(");
+				success = false;
 
-		} else {
-			outVerbose(parseTabs() + "Found (");
+			} else {
+				outVerbose(parseTabs() + "Found (");
+			}
+
+			numTabs--;
+
 		}
 
-		numTabs--;
+		if(success) {
+			success = parseExpr();
+		}
 
-	}
-
-	if(success) {
-		success = parseExpr();
 	}
 
 	if(success) {
