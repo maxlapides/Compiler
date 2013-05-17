@@ -232,7 +232,9 @@ function getTest7() {
 	testProgram += "\t\tprint(\"yay\")\n";
 	testProgram += "\t}\n";
 	testProgram += "\t{\n";
-	testProgram += "\t\tif((5 == 6) == false) {\n";
+	testProgram += "\t\tint x\n";
+	testProgram += "\t\tx = 5\n";
+	testProgram += "\t\tif((x == 6) == false) {\n";
 	testProgram += "\t\t\tprint(\"hooray\")\n";
 	testProgram += "\t\t}\n";
 	testProgram += "\t}\n";

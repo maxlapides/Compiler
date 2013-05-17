@@ -639,6 +639,7 @@ function CodeGen() {
 			// check for collisions
 			if(execEnviro[this.heapPos]) {
 				outError("ERROR: program too long (cannot allocate locations for data).");
+				return;
 			}
 
 			newLoc = toHex(this.heapPos++);
