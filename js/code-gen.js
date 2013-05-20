@@ -21,6 +21,7 @@ var COMPARE		= "EC";
 var BRANCH		= "D0";
 var INCREMENT	= "EE";
 var SYS_CALL	= "FF";
+var MAX_PAGE_SIZE = 255;
 
 function toHex(x) {
 	// integer
@@ -51,7 +52,7 @@ function CodeGenScope(parent) {
 function CodeGen() {
 
 	this.heapPos = 0;
-	this.stackPos = 95;
+	this.stackPos = MAX_PAGE_SIZE;
 	this.autoStaticDataId = -1;
 	this.scopeRoot = new CodeGenScope();
 	this.curScope = this.scopeRoot;
